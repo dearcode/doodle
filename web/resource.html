@@ -1,0 +1,285 @@
+<div class="toplink">
+    <div class="container" id="top_link">
+    </div> 
+</div>
+<div class="container" >
+    <p>
+    <button type="button" class="btn btn-success" onclick="newModel()">关联角色</button>
+    </p>
+    <table id="data_table"  
+        data-toggle="table"
+        data-url="resource/"
+        data-pagination="true"
+        data-side-pagination="client"
+        data-sort-order="desc"
+        data-page-list="[20, 50, 100]"
+        data-query-params="queryParams"
+        style="word-break:break-all; word-wrap:break-all;"
+        >
+        <thead>
+            <tr>
+                <th data-field= 'RoleName' data-sortable="true"  data-formatter="nameFormatter">名称</th>
+                <th data-field= 'RoleComment' data-sortable="true">说明</th>
+                <th data-field= 'Mtime' data-sortable="true">时间</th>
+                <th data-formatter="actionFormatter" data-events="actionEvents">操作</th>
+            </tr>
+        </thead>
+
+    </table>
+
+
+    <div class="modal fade" id="model_dialog" style="z-index:2000">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">关联角色</h4>
+                </div>
+                <div class="modal-body" id="modal_content">
+                    <form class="form-horizontal" role="form" id="model_form" >
+                        <form class="form-horizontal" role="form" id="form_role" >
+                            <table id="role_table"  
+                                data-toggle="table"
+                                data-url="role/"
+                                data-pagination="true"
+                                data-cache="false"
+                                data-side-pagination="client"
+                                data-sort-order="desc"
+                                data-query-params="queryRoleParams"
+                                data-page-list="[20, 50, 100]"
+                                data-click-to-select="true"
+                                >
+                                <thead>
+                                    <tr>
+                                        <th data-field="state" data-checkbox="true"></th>
+                                        <th data-field= 'Name' data-sortable="true">角色</th>
+                                        <th data-field= 'Comment' data-sortable="true">说明</th>
+                                        <th data-field= 'Mtime' data-sortable="true">更新时间</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
+                    <button type="button" class="btn btn-primary" onclick="submitModel()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var resourceID = requestParse("resourceID");
+    var serviceID = requestParse("serviceID");
+    var resourceInfo;
+    var serviceInfo;
+
+    $("#resource_id").val(resourceID);
+
+    //添加`操作`列对应事件
+    function actionFormatter(value, row, index) {
+        if (row.RoleID == serviceInfo.role_id) {
+            return '';
+        }
+        return '<a class="delete glyphicon glyphicon-trash" href="javascript:void(0)" title="删除"></a>' ;
+    }
+
+
+    var confirmRoleID = 0;
+
+    var confirmID = 0;
+    //显示删除应用确认对话框
+    function deleteDialog(e, value, row, index) {
+        confirmID = row.ID;
+        confirmRoleID = row.RoleID;
+
+        $("#confirm_modal_title").html("确认要删除以下内容？");
+        $("#confirm_modal_content").html("<h4>"+row.RoleName+"</h4>");
+        $("#confirm_dialog").modal('show');
+    }
+
+
+    function doConfirm() {
+        $("#confirm_dialog").modal('hide');
+        if (confirmID == 0) {
+            return;
+        }
+
+        $.ajax(
+        {
+            type: "DELETE",
+            url:
+            "resource/role/?id="+confirmID+"&resourceID="+resourceID+"&roleID="+confirmRoleID, 
+            async: false,
+            success: function(data,status) { 
+                showMessage("<h3>成功</h3>");
+                $('#data_table').bootstrapTable('refreshOptions',{pageNumber: 1,offset:0});
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    function modelReset() {
+        $("#model_form").each(function() {   
+            this.reset();   
+        });   
+        $('#role_table').bootstrapTable('refreshOptions',{});
+    }
+
+    $('#model_dialog').on('show.bs.modal', function (e) {
+        modelReset();
+    })
+
+    function newModel() {
+        $(".modal #name").val("");
+        $(".modal #email").val("");
+
+        $("#modal_title").html("关联角色");
+        $("#model_dialog").modal('show');
+    }
+
+
+    //添加的数据
+    function submitModel() {
+        var result = null;
+        var count = 0;
+
+        $("#role_table").bootstrapTable('getAllSelections').forEach(function(e) { count++; });
+        if (count == 0)  {
+            showMessage("没选择角色");
+            return;
+        }
+
+        $("#role_table").bootstrapTable('getAllSelections').forEach(function(e) {
+            var data = "resourceID="+resourceID+"&roleID="+e.ID; 
+            $.ajax({
+                type: "POST",
+                url: "resource/",
+                data: data,
+                async: false,
+                success: function(data,status) { 
+                    if (data.Status == 0) {
+                        return;
+                    }
+                    result = data;
+                },
+                error: function(req, data, error) { 
+                    result = req.responseText;
+                },
+            });
+            if (result != null) {
+                showMessage("<h3>失败:"+result.msg+"</h3>");
+                return false;
+            }
+        });
+
+        if (result == null) {
+            $("#model_dialog").modal('hide');
+            showMessage("<h3>添加成功</h3>");
+            $('#data_table').bootstrapTable('refreshOptions',{});
+        }
+    }
+
+    window.actionEvents = {
+        'click .delete': deleteDialog,
+    };
+
+    function queryParams(params) {
+        params.resourceID = resourceID;
+        return params; 
+    }
+
+    function queryRoleParams(params) {
+        params.resource_id = resourceID;
+        return params; 
+    }
+
+    function loadServiceInfo() {
+        $.ajax(
+        {
+            type: "GET",
+            url: "service/info/?id="+serviceID,
+            async: false,
+            success: function(data,status) { 
+                serviceInfo = data;
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    function loadResourceInfo() {
+        $.ajax(
+        {
+            type: "GET",
+            url: "resource/info?resource_id="+resourceID,
+            async: false,
+            success: function(data,status) { 
+                if (data.Status != 0 ) {
+                    showMessage("<h3>"+data.Message+"</h3>");
+                    return;
+                }
+                resourceInfo = data.Data;
+                $("#link_title").html(resourceInfo.Name);
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    function nameFormatter(value, row, index) {
+        return '<a target="_parent" href="?action=service&page=user&serviceID='+serviceID+'&roleID='+row.ID+'&resourceID='+resourceID+'" >'+value+'</a>';
+    }
+
+    function initTopLink() {
+        $("#top_link").html(
+        '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>' +
+        '<a target="_parent" href="?action=service&page=service" >服务管理</a>' +
+        '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+        '<a target="_parent" href="?action=service&page=interface&serviceID='+serviceID+'" >接口管理</a>' +
+        '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+        '<span class="active" id="link_title"></span>'
+        );
+    }
+
+    var state = 0;
+
+    $('#message_dialog').on('hidden.bs.modal', function (e) {
+        if (state == 403) {
+            history.back(-1);
+        }
+    })
+
+    function initView() {
+        if (account.IsAdmin) {
+            return;
+        }
+        if (account.Res.find(function(v){return v==serviceInfo.resource_id}) != serviceInfo.resource_id ) {
+            showMessage("<h3>没有权限访问此页面</h3>");
+            state = 403;
+            return;
+        }
+
+        if (account.email == "" || serviceInfo.email != account.email) {
+            showMessage("<h3>没有权限访问此页面</h3>");
+            state = 403;
+            return;
+        }
+    }
+
+    $(function (){
+        loadServiceInfo();
+        initView();
+        initTopLink();
+        loadResourceInfo();
+        $('#data_table').bootstrapTable('refreshOptions',{});
+    })
+</script>

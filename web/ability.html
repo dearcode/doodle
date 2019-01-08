@@ -1,0 +1,73 @@
+<div class="toplink">
+    <div class="container">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        <a target="_parent" href="?action=application&page=application" >应用管理</a>
+        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+        <span class="active" id="link_title"></span>
+    </div> 
+</div>
+<div class="container">
+    <h4>已授权接口</h4>
+    <table id="data_table"  
+        data-toggle="table"
+        data-url="relation/"
+        data-pagination="true"
+        data-side-pagination="server"
+        data-sort-order="desc"
+        data-query-params="queryParams"
+        data-page-list="[5, 10, 20, 50, 100, 200]"
+        >
+        <thead>
+            <tr>
+                <th data-field= 'ServiceName' data-sortable="true" >服务</th>
+                <th data-field= 'InterfaceName' data-sortable="true" data-formatter="interfaceFormatter">接口</th>
+                <th data-field= 'Mtime' data-sortable="true">时间</th>
+            </tr>
+        </thead>
+
+    </table>
+    <div class="bs-callout bs-callout-info">
+        <h4>接口权限申请</h4>
+        <p>如申请接口使用权限，在添加完应用后，联系接口负责人进行接口授权</p>
+    </div>
+</div>
+
+<script>
+
+    var appID = requestParse("appID");
+    var appInfo;
+
+
+    function interfaceFormatter(value, row, index) {
+        return '<a href="?action=service&page=document&serviceID='+row.ServiceID+'&interfaceID='+row.InterfaceID+'" target="_parent">'+value+'</a> ';
+    }
+
+    function loadAppInfo() {
+        $.ajax({
+            type: "GET",
+            url: "application/info?id="+appID,
+            async: false,
+            success: function(data,status) { 
+                appInfo = data;
+                $("#app").val(data.Name);
+                $("#link_title").html(data.Name);
+                $(document).attr("title","接口平台 - "+data.Name);
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    function queryParams(params) {
+        params.applicationID = appID;
+        return params; 
+    }
+
+
+    $(function (){
+        $('#data_table').bootstrapTable('refreshOptions',{});
+        loadAppInfo();
+        $("#appID").val(appID);
+    })
+</script>

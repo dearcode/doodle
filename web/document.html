@@ -1,0 +1,238 @@
+<div class="toplink">
+    <div class="container" id="top_link">
+    </div> 
+</div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body bs-callout-info">
+            <h4 >服务名</h4>
+            <p id="serviceName"></p>
+
+            <h4>服务备注</h4>
+            <p id="serviceInfo"> </p>
+
+            <h4 >接口名</h4>
+            <p id="interfaceName"></p>
+
+            <h4>接口备注</h4>
+            <p id="interfaceInfo"></p>
+
+            <h4>接口级别</h4>
+            <p class="text-danger" id="level"></p>
+
+            <h4>请求方式</h4>
+            <p class="text-danger" id="method"></p>
+
+            <h4>URL</h4>
+            <p class="h4 text-danger" id="api_url"></p>
+
+
+            <table class="table table-hover  table-bordered bs-callout bs-callout-warning" style="word-break:break-all; word-wrap:break-all;">
+                <caption><h4>URL参数</h4></caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-2">字段</th>
+                        <th class="col-md-2">类型</th>
+                        <th class="col-md-2">约束</th>
+                        <th class="col-md-2">示例</th>
+                        <th class="col-md-2">说明</th>
+                    </tr>
+                </thead>
+                <tbody  id="varUrl">
+                </tbody>
+            </table>
+
+            <table class="table table-hover  table-bordered bs-callout bs-callout-warning" style="word-break:break-all; word-wrap:break-all;">
+                <caption><h4>Header</h4></caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-2">字段</th>
+                        <th class="col-md-2">类型</th>
+                        <th class="col-md-2">约束</th>
+                        <th class="col-md-2">示例</th>
+                        <th class="col-md-2">说明</th>
+                    </tr>
+                </thead>
+                <tbody  id="varHeader">
+                </tbody>
+            </table>
+
+            <table class="table table-hover  table-bordered bs-callout bs-callout-warning" style="word-break:break-all; word-wrap:break-all;">
+                <caption><h4>Body</h4></caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-2">字段</th>
+                        <th class="col-md-2">类型</th>
+                        <th class="col-md-2">约束</th>
+                        <th class="col-md-2">示例</th>
+                        <th class="col-md-2">说明</th>
+                    </tr>
+                </thead>
+                <tbody  id="varBody">
+                </tbody>
+            </table>
+
+            <table class="table table-hover table-bordered bs-callout bs-callout-warning" style="word-break:break-all; word-wrap:break-all;">
+                <caption><h4>(请求体)JSON</h4></caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-2">字段</th>
+                        <th class="col-md-2">类型</th>
+                        <th class="col-md-2">约束</th>
+                        <th class="col-md-2">示例</th>
+                        <th class="col-md-2">说明</th>
+                    </tr>
+                </thead>
+                <tbody  id="varRequestJSON">
+                </tbody>
+            </table>
+
+            <table class="table table-hover table-bordered bs-callout bs-callout-warning" style="word-break:break-all; word-wrap:break-all;">
+                <caption><h4>返回值(JSON)</h4></caption>
+                <thead>
+                    <tr>
+                        <th class="col-md-2">字段</th>
+                        <th class="col-md-2">类型</th>
+                        <th class="col-md-2">约束</th>
+                        <th class="col-md-2">示例</th>
+                        <th class="col-md-2">说明</th>
+                    </tr>
+                </thead>
+                <tbody  id="varResponseJSON">
+                </tbody>
+            </table>
+
+            <h4>联系人</h4>
+            <p class="text-danger" id="auth"></p>
+
+        </div>
+    </div>
+</div>
+<script>
+    var interfaceID = requestParse("interfaceID");
+    var serviceID = requestParse("serviceID");
+
+    var service,iface,vars;
+
+    function jumpToVariable() {
+        window.parent.location = "?action=service&page=variable&serviceID="+serviceID+"&interfaceID="+interfaceID;
+    }
+
+    function loadServiceInfo() {
+        $.ajax({
+            type: "GET",
+            url: "service/info/?id="+serviceID,
+            async: false,
+            success: function(data,status) { 
+                service = data;
+            },
+            error: function(req, data, error) { 
+                showMessage("<h4>"+req.responseText+"</h4>"+error);
+            },
+        });
+    }
+
+    function loadInterfaceInfo() {
+        $.ajax({
+            type: "GET",
+            url: "interface/info?id="+interfaceID,
+            async: false,
+            success: function(data,status) { 
+                iface = data;
+                $("#link_title").html(iface.Name);
+                $(document).attr("title","接口平台 - "+iface.Name);
+            },
+            error: function(req, data, error) { 
+                showMessage("<h4>"+req.responseText+"</h4>"+error);
+            },
+        });
+    }
+
+    function loadVariableInfo() {
+        $("#varHeader").append('<tr class="danger"><td>Token</td><td>string</td><td>必填</td><td>Token:在应用中心里</td><td>所有请求必需填写Token</td></tr>');
+        $.ajax({
+            type: "GET",
+            url: "variable/infos?&interfaceID="+interfaceID,
+            async: false,
+            success: function(data,status) { 
+                vars = data.rows;
+                $.each(data.rows, function (i, item) {
+                    cls = ""
+                    if (item.Required == true) {
+                        cls=' class="danger"';
+                    }
+                    switch (item.Postion) {
+                        case 0:
+                        $("#varUrl").append('<tr'+cls+'><td>'+item.Name+'</td><td>'+item.Type+'</td><td>'+getIsRequiredName(item.Required)+'</td><td>'+item.Example+'</td><td>'+item.Comment+'</td></tr>');
+                        break;
+                        case 1:
+                        $("#varHeader").append('<tr'+cls+'><td>'+item.Name+'</td><td>'+item.Type+'</td><td>'+getIsRequiredName(item.Required)+'</td><td>'+item.Example+'</td><td>'+item.Comment+'</td></tr>');
+                        break;
+                        case 2:
+                        case 3:
+                        $("#varBody").append('<tr'+cls+'><td>'+item.Name+'</td><td>'+item.Type+'</td><td>'+getIsRequiredName(item.Required)+'</td><td>'+item.Example+'</td><td>'+item.Comment+'</td></tr>');
+                        break;
+                        case 4:
+                        $("#varRequestJSON").append('<tr'+cls+'><td>'+item.Name+'</td><td>'+item.Type+'</td><td>'+getIsRequiredName(item.Required)+'</td><td>'+item.Example+'</td><td>'+item.Comment+'</td></tr>');
+                        break;
+                        case 14:
+                        $("#varResponseJSON").append('<tr'+cls+'><td>'+item.Name+'</td><td>'+item.Type+'</td><td>'+getIsRequiredName(item.Required)+'</td><td>'+item.Example+'</td><td>'+item.Comment+'</td></tr>');
+                        break;
+                    }
+                });  
+                $("#test_dialog").modal('show');
+            },
+            error: function(req, data, error) { 
+                showMessage("<h4>"+req.responseText+"</h4>"+error);
+            },
+        });
+    }
+
+    function initTopLink() {
+        if (action == "service") {
+            $("#top_link").html(
+            '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>' +
+            '<a target="_parent" href="?action=service&page=service" >服务管理</a>' +
+            '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+            '<a target="_parent" href="?action=service&page=interface&serviceID='+serviceID+'" >接口管理</a>' +
+            '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+            '<span class="active" id="link_title"></span>'
+            );
+        }
+        else {
+            $("#top_link").html(
+            '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>' +
+            '<a target="_parent" href="?action=role&page=role" >文档中心</a>' +
+            '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+            '<span class="active" id="link_title"></span>'
+            );
+        }
+    }
+
+    $(function(){
+        initTopLink();
+
+        loadServiceInfo();
+        loadInterfaceInfo();
+        loadVariableInfo();
+
+        if (service.version == 1) {
+        $("#api_url").html("<code>http://"+domain+":9000/"+service.path+iface.Path+"</code>");
+        }
+        else {
+        $("#api_url").html("<code>http://"+domain+":9000/"+service.path+"/"+iface.Path+"/</code>");
+
+        }
+
+
+        $("#serviceName").html(service.name);
+        $("#serviceInfo").html(service.comment);
+        $("#interfaceName").html(iface.Name);
+        $("#interfaceInfo").html(iface.Comment);
+        $("#level").html(getLevelName(iface.Level));
+        $("#method").html(getMethodName(iface.Method));
+        $("#auth").html(iface.User+'&nbsp;&nbsp;<div class="glyphicon glyphicon-envelope">'+iface.Email+'</div>');
+
+    });
+
+</script>

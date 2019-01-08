@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>接口平台</title>
+
+        <link href="static/css/bootstrap.min.css" rel="stylesheet">
+        <script src="static/js/jquery.min.js"></script>
+        <script src="static/js/bootstrap.min.js"></script>
+        <link href="static/css/docs.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="static/css/bootstrap-table.min.css">
+        <script src="static/js/bootstrap-table.min.js"></script>
+        <script src="static/js/bootstrap-table-zh-CN.min.js"></script>
+
+        <script src="static/js/common.js"></script>
+        <style type="text/css">
+            .logo {
+                font-size:28px;
+                text-shadow: -1px -1px 0 #fff,1px 1px 0 #333,1px 1px 0 #444;
+            }
+            .toplink {
+                background: #6AC20C;
+                height:40px;
+                line-height: 40px;
+                margin-bottom:10px;
+                border-bottom: 1px solid #05B65C;
+                color:#fff;
+            }
+            .toplink a {
+                font-size:16px;
+                color: #fff;
+
+            }
+
+        </style> 
+    </head>
+
+    <body>
+        <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="?action=service" class="navbar-brand logo" style="color:#03a9f4">{API}</a>
+            </div>
+            <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+                <li id='overview'><a href="?action=overview" >流量统计</a></li>
+                <li id='service' ><a href="?action=service" >服务中心</a></li>
+                <li id='application' ><a href="?action=application">应用中心</a></li>
+                <li id='docs'><a href="?action=docs">文档中心</a></li>
+                <li id='role' ><a href="?action=role">权限管理</a></li>
+                <li id='cluster' ><a href="?action=cluster">集群管理</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <div class="btn-group" style="margin-top:10px">
+                    <button type="button" class="btn btn-danger" id="fullname"></button>
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" id="username"></a></li>
+                        <li><a href="#" id="email"></a></li>
+                        <li><a href="#" id="orgname"></a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" onclick="logout()">退出</a></li>
+                    </ul>
+                </div>
+            </ul>
+            </nav>
+        </div>
+        </header>
+
+        <div class="row">
+            <div style="visibility:none" id="common"> </div>
+            <div id="main"> </div>
+        </div>
+
+
+        <footer class="bs-docs-footer" role="contentinfo">
+        <div class="container">
+            API管理平台 2016 ~ 2018 
+        </div>
+        </footer>
+
+        <script>
+            var domain = "";
+            var ssoURL = "";
+
+            function logout() {
+                location.href=ssoURL + "/logout?ReturnUrl="+location.href;
+            }
+
+            function loadAccount() {
+                $.ajax(
+                {
+                    type: "GET",
+                    url: "account",
+                    async: false,
+                    success: function(data,status) { 
+                        if (data.Status != 0) {
+                            location.href= ssoURL+"/login?ReturnUrl="+location.href;
+                            return
+                        }
+                        account = data;
+                        $("#fullname").text(data.fullname);
+                        $("#username").text(data.username);
+                        $("#email").text(data.email);
+                        $("#orgname").html(data.orgName);
+                    },
+                    error: function(req, data, error) { 
+                        showMessage("<h3>"+req.responseText+"</h3>");
+                    },
+                });
+            }
+
+            function loadServerConfig() {
+                $.ajax({
+                    type: "GET",
+                    url: "config",
+                    async: false,
+                    success: function(data,status) { 
+                        domain = status.Domain;
+                        ssoURL = status.SSOURL;
+                    },
+                    error: function(req, data, error) { 
+                        showMessage("<h3>"+req.responseText+"</h3>");
+                    },
+                });
+            }
+
+            function gatePageUrl() {
+                action = requestParse("action");
+                page = requestParse("page");
+
+                if (action == "") {
+                    action="service";
+                }
+
+                param = location.href.substring(location.href.indexOf("?")+1, location.href.length); 
+
+
+                $(".active").attr("class", "");
+
+                $('#'+requestParse("action")).attr("class", "active");
+
+                param = "?t="+new Date().getTime() +"&"+ param;
+
+                var url = "overview.html";
+                if (page == "") {
+                    url = action+".html"+param;
+                    }else{
+                    url = page+".html"+param;
+                }
+
+                return url;
+            }
+
+            $(function (){
+                $("#common").load("common.html", function() {
+
+                    loadServerConfig();
+
+                    loadAccount();
+
+                    url = gatePageUrl();
+
+                    $("#main").load(url, function() {
+                        $('head').append('<link href="static/css/bootstrap-table.min.css" rel="stylesheet" type="text/css" />')
+                        $.getScript('static/js/bootstrap-table.min.js');
+                        $.getScript('static/js/bootstrap-table-zh-CN.min.js');
+                    });
+                });
+
+            })
+        </script>
+    </body>
+</html>
+

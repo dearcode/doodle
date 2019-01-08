@@ -1,0 +1,48 @@
+<div class="toplink">
+    <div class="container">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        <a target="_parent" href="?action=overview&page=overview" >流量统计</a>
+        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+        <span class="active" id="link_title">异常请求</span>
+    </div> 
+</div>
+<div class="container" >
+    <table id="data_table"  
+        data-toggle="table"
+        data-url="stats/error/"
+        data-pagination="true"
+        data-side-pagination="server"
+        data-sort-order="desc"
+        data-query-params="queryParams"
+        data-page-list="[10, 20, 50, 100, 200]"
+        style="word-break:break-all; word-wrap:break-all;"
+        >
+        <thead>
+            <tr>
+                <th data-field= 'IfaceName' data-sortable="true" >接口</th>
+                <th data-field= 'ServiceName' data-sortable="true">服务</th>
+                <th data-field= 'AppName' data-sortable="true">应用</th>
+                <th data-field= 'Session' data-sortable="true">日志ID</th>
+                <th data-field= 'Info' data-sortable="true">日志</th>
+                <th data-field= 'Ctime' data-sortable="true">时间</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+<script>
+
+    var interfaceID = requestParse("interfaceID");
+
+
+    function queryParams(params) {
+        params.sort = "ctime";
+        params.interfaceID = interfaceID;
+        return params; 
+    }
+
+    $(function (){
+        $('#data_table').bootstrapTable('refreshOptions',{});
+        $(document).attr("title","接口平台 - 异常请求");
+    })
+</script>

@@ -1,0 +1,239 @@
+<div class="toplink">
+    <div class="container">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        <span class="active" id="link_title">应用管理</span>
+    </div> 
+</div>
+<div class="container" >
+    <p>
+    <button type="button" class="btn btn-success" onclick="newApp()">新建应用</button>
+    </p>
+    <table id="data_table"  
+        data-toggle="table"
+        data-url="application/"
+        data-pagination="true"
+        data-side-pagination="server"
+        data-sort-order="desc"
+        data-page-list="[5, 10, 20, 50, 100, 200]"
+	style="word-break:break-all; word-wrap:break-all;"
+        >
+        <thead>
+            <tr>
+                <th data-field= 'Name' data-sortable="true"  data-formatter="nameFormatter">名称</th>
+                <th data-field= 'User' data-sortable="true">联系人</th>
+                <th data-field= 'Email' data-sortable="true">邮箱</th>
+                <th data-field= 'Comment' data-sortable="true">备注</th>
+                <th data-field= 'Mtime' data-sortable="true">时间</th>
+                <th data-formatter="actionFormatter" data-events="actionEvents">操作</th>
+            </tr>
+        </thead>
+
+    </table>
+
+
+    <div class="modal fade" id="application_dialog" style="z-index:2000">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title" >应用</h4>
+                </div>
+                <div class="modal-body" id="modal_content">
+                    <form class="form-horizontal" role="form" id="form_application" >
+                        <div class="control-group">
+                            <label class="control-label">名称</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="name" name="name" maxlength="32" oninput="onInput" value="" placeholder="应用名称, 中文, 必填" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">联系人</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="user" name="user" value="" placeholder="联系人邮件地址, 必填"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">邮箱</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="email" name="email" value="" placeholder="联系人邮件地址, 必填"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">备注</label>
+                            <div class="controls">
+                                <input type="text" maxlength="500" class="form-control" id="comment" name="comment" oninput="onInput" value="" placeholder="备注信息，必填, 最多500字符">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
+                    <button type="button" class="btn btn-primary" onclick="submitApp()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //添加关联列表的连接
+    function nameFormatter(value, row, index) {
+        return '<a href="?action=application&page=ability&appID='+row.ID+'" target="_parent">'+value+'</a> ';
+    }
+
+    //添加`操作`列对应事件
+    function actionFormatter(value, row, index) {
+        return '<a class="edit glyphicon glyphicon-pencil" href="javascript:void(0)" title="修改"></a>'+
+        '&nbsp;&nbsp;'+
+        '<a class="delete glyphicon glyphicon-trash" href="javascript:void(0)" title="删除"></a>' +
+        '&nbsp;&nbsp;'+
+        '<a class="token glyphicon glyphicon-eye-open" href="javascript:void(0)" title="Token"></a>';
+    }
+
+
+
+    var modifyAppID = 0;
+    //显示修改应用对话框
+    function modifyDialog(e, value, row, index) {
+        modifyAppID = row.ID;
+        $(".modal #name").val(row.Name);
+        $(".modal #user").val(row.User);
+        $(".modal #email").val(row.Email);
+        $(".modal #comment").val(row.Comment);
+
+        if (account.IsAdmin) {
+            $(".modal #user").removeAttr("readonly");
+            $(".modal #email").removeAttr("readonly");
+            }else {
+            $(".modal #user").attr("readonly", "readonly");
+            $(".modal #email").attr("readonly", "readonly");
+        }
+
+        $("#modal_title").html("修改应用信息");
+        $("#application_dialog").modal('show');
+    }
+
+    var confirmID = 0;
+    //显示删除应用确认对话框
+    function deleteDialog(e, value, row, index) {
+        confirmID = row.ID;
+        $("#confirm_modal_title").html("确认要删除以下应用信息？");
+        $("#confirm_modal_content").html("<h4>"+row.Name+"</h4>");
+        $("#confirm_dialog").modal('show');
+    }
+
+    //显示删除应用确认对话框
+    function tokenDialog(e, value, row, index) {
+        confirmID = 0;
+        showMessageAlert("Token", row.Token);
+    }
+
+    function doConfirm() {
+        $("#confirm_dialog").modal('hide');
+        if (confirmID == 0) {
+            return;
+        }
+
+        $.ajax({
+            type: "DELETE",
+            url: "application/?id="+confirmID, 
+            async: false,
+            success: function(data,status) { 
+                showMessage("<h3>成功</h3>");
+                $('#data_table').bootstrapTable('refreshOptions',{pageNumber: 1,offset:0});
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    $('#application_dialog').on('hidden.bs.modal', function (e) {
+        $("#form_application").each(function() {   
+            this.reset();   
+        });   
+    })
+    function newApp() {
+        modifyAppID = 0;
+        $(".modal #name").val("");
+        $(".modal #user").val(account.fullname);
+        $(".modal #email").val(account.email);
+        $(".modal #comment").val("");
+
+        if (account.IsAdmin) {
+            $(".modal #user").removeAttr("readonly");
+            $(".modal #email").removeAttr("readonly");
+            }else {
+            $(".modal #user").attr("readonly", "readonly");
+            $(".modal #email").attr("readonly", "readonly");
+        }
+
+        $("#modal_title").html("新建应用");
+        $("#application_dialog").modal('show');
+    }
+
+    //提交修改or添加的数据
+    function submitApp() {
+	if(checkEmpty($("#name").val())) {
+		showMessage("名称不能为空");
+		return;
+	}
+	if(checkEmpty($("#comment").val())) {
+		showMessage("备注不能为空");
+		return;
+	}
+
+        url = "application/";
+        method = "POST";
+        if (modifyAppID != 0) {
+            url += "?id="+modifyAppID;
+            method = "PUT";
+        }
+        var data = $("#form_application").serialize(); 
+        $.ajax({
+            type: method,
+            url: url,
+            data: data,
+            async: false,
+            success: function(data,status) { 
+                if (data.Status == 0) {
+                    $("#application_dialog").modal('hide');
+                    showMessage("<h3>成功</h3>");
+                    $('#data_table').bootstrapTable('refreshOptions',{pageNumber: 1,offset:0});
+                    $("#name").val("");
+                    $("#path").val("");
+                    $("#comment").val("");
+                    }else {
+                    showMessage("<h3>失败:"+data.Message+"</h3>");
+                }
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>"+error);
+            },
+        });
+    }
+
+
+    window.actionEvents = {
+        'click .edit ': modifyDialog,
+        'click .delete': deleteDialog,
+        'click .token ': tokenDialog,
+    };
+
+
+/*
+    $( "[maxlength]" ).keyup(function() {
+        var limitLength = $( this ).attr( "maxlength" ) || 100;
+        var curLength = $( this ).val().length;
+        if (curLength >= limitLength) {
+            var str = $( this ).val().substr(0, limitLength);
+            $( this ).val(str);
+            alert("最大输入限制"+limitLength);
+        }
+    }); 
+*/
+
+    $(function (){
+        $('#data_table').bootstrapTable('refreshOptions',{});
+    })
+</script>

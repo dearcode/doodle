@@ -1,0 +1,123 @@
+<script src="/static/js/echarts.js"></script>
+
+<div class="toplink">
+    <div class="container">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        <span class="active" id="link_title">流量统计</span>
+    </div> 
+</div>
+<div class="container" >
+    <p>
+    <a class="btn btn-danger" href="/?action=stats&page=stats_error" >异常请求</a>
+    </p>
+    <div class="row">
+        <div id="sum_charts" class="col-md-6" style="height:400px"></div>
+        <div id="avg_charts" class="col-md-6" style="height:400px"></div>
+    </div>
+    <div class="row" style="padding:0 20px 0 20px">
+        <h3>Top10(24h)</h3>
+        <table id="top10_table"  
+            data-toggle="table"
+            data-url="stats/top/iface/"
+            data-pagination="false"
+            data-side-pagination="server"
+            style="word-break:break-all; word-wrap:break-all;"
+            > 
+            <thead>
+                <tr>
+                    <th data-field= 'iface' data-formatter="nameFormatter">接口</th>
+                    <th data-field= 'service'>服务</th>
+                    <th data-field= 'user' >负责人</th>
+                    <th data-field= 'value'>访问量</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    function nameFormatter(value, row, index) {
+        return '<a href="?action=overview&page=stats_interface&interfaceID='+row.id+'" target="_parent">'+value+'</a> ';
+    }
+
+    var sumChart = echarts.init(document.getElementById('sum_charts'));
+    var avgChart = echarts.init(document.getElementById('avg_charts'));
+
+    function loadData() {
+        $.ajax({
+            type: "GET",
+            url: "stats/sum/", 
+            async: false,
+            success: function(result,status) { 
+                var sumData = [];
+                var avgData = [];
+                $.each(result, function(index, item) {
+                    sumData.push({ name: item.Date, value: [ item.Date, item.Sum]});
+                    avgData.push({ name: item.Date, value: [ item.Date, item.Avg]});
+                });
+                sumChart.setOption({ 
+                    title: {
+                        text: "请求量"
+                    },
+                    series: [{ data: sumData}] ,
+                });
+                avgChart.setOption({ 
+                    title: {
+                        text: "平均延迟(毫秒)"
+                    },
+                    series: [{ data: avgData}] ,
+                });
+            },
+            error: function(req, result, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    option = {
+        title: {
+            text: '平台流量'
+        },
+        tooltip: {
+            trigger: 'axis',
+            formatter: function (params) {
+                //点击线时弹出内容
+                console.log(params[0]);
+                params = params[0];
+                return params.name + ' : ' + params.value[1];
+            },
+            axisPointer: {
+                animation: false
+            }
+        },
+        xAxis: {
+            type: 'time',
+            splitLine: {
+                show: false
+            }
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, '100%'],
+            splitLine: {
+                show: false
+            }
+        },
+        series: [{
+            name: '请求数',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+        }]
+    };
+
+    sumChart.setOption(option);
+    avgChart.setOption(option);
+
+    loadData();
+
+    setInterval(function () {
+        loadData();
+    }, 100000);
+</script>

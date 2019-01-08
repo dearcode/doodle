@@ -1,0 +1,485 @@
+<div class="toplink">
+    <div class="container">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        <a target="_parent" href="?action=service&page=service" >服务管理</a>
+        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+        <span class="active" id="link_title"></span>
+    </div> 
+</div>
+<div class="container">
+    <p id="toolbar">
+    <button type="button" class="btn btn-success" onclick="newInterface()">新建接口</button>
+    <button type="button" class="btn btn-warning" onclick="roleManager()" id="btnrbac" style="display:none">权限管理</button>
+    <button type="button" class="btn btn-info" onclick="nodeManager()" >服务节点</button>
+    </p>
+
+    <table id="data_table"  
+        data-toggle="table"
+        data-url="interface/"
+        data-pagination="true"
+        data-side-pagination="server"
+        data-sort-order="desc"
+        data-search="true"
+        data-page-list="[10, 20, 50, 100, 200]"
+        data-query-params="queryParams"
+        data-show-toggle="true"
+        data-show-columns="true"
+        data-row-style="rowStyle"
+        data-toolbar="#toolbar"
+        style="word-break:break-all; word-wrap:break-all;"
+        >
+        <thead>
+            <tr>
+                <th data-field='Name' data-sortable="true"  data-formatter="nameFormatter">名称</th>
+                <th data-field='Method' data-sortable="true">方法</th>
+                <th data-field='State' data-sortable="true" data-visible="false">状态</th>
+                <th data-field='Level' data-sortable="true" data-formatter="levelFormatter" data-visible="false">等级</th>
+                <th data-field='User' data-sortable="true" data-visible="false">负责人</th>
+                <th data-field='Path' data-sortable="true" data-formatter="frontFormatter" >前端地址</th>
+                <th data-field='Backend' data-sortable="true" data-visible="false">后端地址</th>
+                <th data-field='Comment'>备注</th>
+                <th data-field='Ctime' data-visible="false">创建时间</th>
+                <th data-formatter="actionFormatter" data-events="actionEvents">操作</th>
+            </tr>
+        </thead>
+
+    </table>
+
+
+    <div class="modal fade" id="interface_dialog" style="z-index:2000">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title" >接口</h4>
+                </div>
+                <div class="modal-body" id="modal_content">
+                    <form class="form-horizontal" role="form" id="form_interface" >
+                        <div class="control-group">
+                            <label class="control-label">名称</label>
+                            <div class="controls">
+                                <input type="text" maxlength="32" class="form-control" id="name" name="name" oninput="onInput" value="" placeholder="接口名称, 中文, 必填" >
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">接口级别</label>
+                            <span class="alert-danger" id="alert_tip" style="font-size: 15px;">
+                                &nbsp;&nbsp;*&nbsp;&nbsp;重要:对线上库有写操作或调用比较频繁的接口
+                            </span>
+                            <div class="controls">
+                                <label class="radio-inline"> <input type="radio" name="level" id="level0" value="0" checked="checked" >重要</label>
+                                <label class="radio-inline"> <input type="radio" name="level" id="level1" value="1">普通</label>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">请求方式</label>
+                            <div class="controls">
+                                <label class="radio-inline"> <input type="radio" name="method" id="method0" value="0" checked="checked" >GET</label>
+                                <label class="radio-inline"> <input type="radio" name="method" id="method1" value="1">POST</label>
+                                <label class="radio-inline"> <input type="radio" name="method" id="method2" value="2">PUT</label>
+                                <label class="radio-inline"> <input type="radio" name="method" id="method3" value="3">DELETE</label>
+                                <label class="radio-inline"> <input type="radio" name="method" id="method4" value="4">RESTful</label>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">路径</label>
+                            <div class="controls">
+                                <input type="text" maxlength="64" class="form-control" id="path" name="path" oninput="onInput" value="" placeholder="接口路径, 英文(字母数字), 必填" >
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">后端URL</label>
+                            <div class="controls">
+                                <input type="text" maxlength="128" class="form-control" id="backend" name="backend" oninput="onInput" value="" placeholder="后端服务URL, 必填" >
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">备注</label>
+                            <div class="controls">
+                                <input type="text" maxlength="500" class="form-control" id="comment" name="comment" oninput="onInput" value="" placeholder="备注信息，必填, 最多500字符">
+                                <input type="hidden" id="pid" name="pid" value="" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">负责人</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="user" name="user" value="" placeholder="服务管理员,中文" >
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">邮箱地址</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="email" name="email" value="" placeholder="服务管理员邮箱地址" >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
+                    <button type="button" class="btn btn-primary" onclick="submitInterface()">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="node_dialog" style="z-index:2000">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title" >服务列表</h4>
+                </div>
+                <div class="modal-body" id="modal_content">
+                    <table id="node_table"  
+                        data-toggle="table"
+                        data-url="nodes/"
+                        data-pagination="true"
+                        data-side-pagination="client"
+                        data-page-list="[10, 20, 50, 100, 200]"
+                        data-query-params="queryNodeParams"
+                        style="word-break:break-all; word-wrap:break-all;"
+                        >
+                        <thead>
+                            <tr>
+                                <th data-formatter="serverFormatter" >服务器</th>
+                                <th data-field='PID'>进程号</th>
+                                <th data-formatter="gittimeFormatter" >源码提交时间</th>
+                                <th data-field='GitMessage'>源码提交信息</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+<script>
+    var serviceID = requestParse("serviceID");
+
+    function serverFormatter(value, row, index) {
+        return '<a target="_blank" href="http://'+row.Host+":"+row.Port+'/doc/" >'+row.Host+'</a>';
+    }
+    function gittimeFormatter(value, row, index) {
+        return new Date(row.GitTime* 1000).Format("yyyy-MM-dd hh:mm:ss");
+    }
+
+    //添加到接口的链接
+    function nameFormatter(value, row, index) {
+        return '<a target="_parent" href="?action=service&page=variable&serviceID='+serviceID+'&interfaceID='+row.ID+'" >'+value+'</a>';
+    }
+
+    //接口前端地址
+    function frontFormatter(value, row, index) {
+        return "/"+row.Service.path + row.Path;
+    }
+
+    //级别格式话0:重要,1:普通
+    function levelFormatter(value, row, index) {
+        if (row.Level == 0 ){
+            return "重要";
+        }else {
+            return "普通";
+        }
+    }
+
+    //添加`操作`列对应事件
+    function actionFormatter(value, row, index) {
+        return '<a class="edit glyphicon glyphicon-pencil" href="javascript:void(0)" title="修改"></a>' +
+        '&nbsp;&nbsp;' +
+        '<a class="delete glyphicon glyphicon-trash" href="javascript:void(0)" title="删除"></a>' +
+        '&nbsp;&nbsp;' +
+        '<a target="_parent" class="doc glyphicon glyphicon-info-sign" href="?action=service&page=document&serviceID='+serviceID+'&interfaceID='+row.ID+'" title="文档"></a>' +
+        '&nbsp;&nbsp;'+
+        '<a class="deploy glyphicon glyphicon-cloud-upload" href="javascript:void(0)" title="发布"></a>' ;
+    }
+
+    var modifyID = 0;
+    //显示修改接口对话框
+    function modifyDialog(e, value, row, index) {
+        modifyID = row.ID;
+        $("#name").val(row.Name);
+        $("#path").val(row.Path);
+        $(".modal #user").val(row.User);
+        $(".modal #email").val(row.Email);
+
+        if (account.IsAdmin) {
+            $(".modal #user").removeAttr("readonly");
+            $(".modal #email").removeAttr("readonly");
+            }else {
+            $(".modal #user").attr("readonly", "readonly");
+            $(".modal #email").attr("readonly", "readonly");
+        }
+
+        switch (row.Method) 
+        {
+            case "GET":
+            $("#method0").attr('checked',true);
+            break;
+            case "POST":
+            $("#method1").attr('checked',true);
+            break;
+            case "PUT":
+            $("#method2").attr('checked',true);
+            break;
+            case "DELETE":
+            $("#method3").attr('checked',true);
+            break;
+            case "RESTful":
+            $("#method4").attr('checked',true);
+            break;
+        }
+
+        if(row.Level == 0){
+            $("#level0").attr('checked',true);
+        }else{
+            $("#level1").attr('checked',true);
+        }
+
+        $("#backend").val(row.Backend);
+        $("#comment").val(row.Comment);
+        $("#modal_title").html("修改接口基本信息");
+        $("#interface_dialog").modal('show');
+    }
+
+    var confirmID = 0;
+    var confirmType = 0;
+
+    //显示删除服务确认对话框
+    function deleteDialog(e, value, row, index) {
+        confirmType = 0;
+        confirmID = row.ID;
+        $("#confirm_modal_title").html("确认要删除以下接口？");
+        $("#confirm_modal_content").html("<code>"+row.Name+"</code>");
+        $("#confirm_dialog").modal('show');
+    }
+
+    function deployDialog(e, value, row, index) {
+        confirmType = 1;
+        confirmID = row.ID;
+        $("#confirm_modal_title").html("确认要发布这个接口？");
+        $("#confirm_modal_content").html("<code>"+row.Name+"</code>");
+        $("#confirm_dialog").modal('show');
+    }
+
+    function doConfirm() {
+        $("#confirm_dialog").modal('hide');
+        if (confirmID == 0 ) {
+            return;
+        }
+
+        method = "DELETE";
+        url = "interface/?id="+confirmID;
+
+        if (confirmType == 1) {
+            method = "PUT";
+            url = "interface/deploy?id="+confirmID;
+        }
+
+        $.ajax({
+            type: method,
+            url: url,
+            async: false,
+            success: function(data,status) { 
+                if (data.Status != 0 ) {
+                    showMessage("<h3>"+data.Message+"</h3>");
+                    return;
+                }
+                showMessage("<h3>成功</h3>");
+                $('#data_table').bootstrapTable('refreshOptions',{pageNumber: 1,offset:0});
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    function newInterface() {
+        // 初始化modal数据
+        if (modifyID != 0) {
+            modifyID = 0;
+            $("#name").val("");
+            $("#path").val("");
+            $("#backend").val("");
+            $("#comment").val("");
+        }
+
+        $(".modal #user").val(account.fullname);
+        $(".modal #email").val(account.email);
+
+        if (account.IsAdmin) {
+            $(".modal #user").removeAttr("readonly");
+            $(".modal #email").removeAttr("readonly");
+        }
+        else {
+            $(".modal #user").attr("readonly", "readonly");
+            $(".modal #email").attr("readonly", "readonly");
+        }
+        $("#modal_title").html("新建接口");
+        $("#interface_dialog").modal('show');
+    }
+
+    function nodeManager() {
+        $("#node_dialog").modal('show');
+    }
+
+    //提交修改or添加的数据
+    function submitInterface() {
+        if(checkEmpty($("#name").val())) {
+            showMessage("名称不能为空");
+            return;
+        }
+        if(checkEmpty($("#path").val())) {
+            showMessage("路径不能为空");
+            return;
+        }
+
+        if(!checkPath($("#path").val())){
+            showMessage("路径格式不正确，只能包含数字和大小写字母");
+            return;
+        }
+        if(checkEmpty($("#backend").val())) {
+            showMessage("后端URL不能为空");
+            return;
+        }
+
+        if(checkEmpty($("#comment").val())) {
+            showMessage("备注不能为空");
+            return;
+        }
+
+        url = "interface/";
+        method = "POST";
+        if (modifyID != 0) {
+            url += "?id="+modifyID;
+            method = "PUT";
+        }
+        $("#pid").val(serviceID);
+        var data = $("#form_interface").serialize(); 
+        $.ajax(
+        {
+            type: method,
+            url: url,
+            data: data,
+            async: false,
+            success: function(data, status) { 
+                if (data.Status == 0) {
+                    $("#interface_dialog").modal('hide');
+                    showMessage("<h3>成功</h3>");
+                    $('#data_table').bootstrapTable('refreshOptions',{pageNumber: 1,offset:0});
+                    $("#name").val("");
+                    $("#path").val("");
+                    $("#backend").val("");
+                    $("#comment").val("");
+                }
+                else {
+                    showMessage("<h3>"+data.Message+"</h3>");
+                }
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>"+req.responseText+"</h3>"+error);
+            },
+        });
+    }
+
+
+    window.actionEvents = {
+        'click .edit': modifyDialog,
+        'click .delete': deleteDialog, 
+        'click .deploy': deployDialog, 
+    };
+
+
+    function queryNodeParams(params) {
+        params.serviceID = serviceID;
+        return params; 
+    }
+
+    function queryParams(params) {
+        params.pid = serviceID;
+        params.state=0; 
+        return params; 
+    }
+
+    function rowStyle(row, index) {
+        switch (row.Method) {
+            case 0:
+            row.Method = "GET";
+            break;
+            case 1:
+            row.Method = "POST";
+            break;
+            case 2:
+            row.Method = "PUT";
+            break;
+            case 3:
+            row.Method = "DELETE";
+            break;
+            case 4:
+            row.Method = "RESTful";
+            break;
+        }
+
+        if (row.State == false ){
+            row.State = "未发布";
+            return {};
+            }else {
+            row.State = "已发布";
+            return { classes: 'success'};
+        }
+        //'active' 'success', 'info', 'warning', 'danger'
+        return {};
+    }
+
+    var serviceInfo;
+
+    function loadServiceInfo() {
+        $.ajax(
+        {
+            type: "GET",
+            url: "service/info/?id="+serviceID,
+            async: false,
+            success: function(data,status) { 
+                serviceInfo = data;
+                $("#link_title").html(data.name);
+                $(document).attr("title","接口平台 - "+data.name);
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    function roleManager() {
+        location.href="?action=service&page=resource&resourceID=" + serviceInfo.resource_id+"&serviceID="+serviceID;
+    }
+
+    var state = 0;
+
+    $('#message_dialog').on('hidden.bs.modal', function (e) {
+        if (state == 403) {
+            history.back(-1);
+        }
+    })
+
+    function initView() {
+        if (!account.IsAdmin) {
+            if (account.Res.find(function(v){return v==serviceInfo.resource_id}) != serviceInfo.resource_id ) {
+                showMessage("<h3>没有权限访问此页面</h3>");
+                state = 403;
+                return;
+            }
+        }
+
+        if (account.IsAdmin || ((account.email != "" ) && (serviceInfo.email == account.email))) {
+            $("#btnrbac").show();
+        }
+    }
+
+    $(function(){
+        loadServiceInfo();
+        initView();
+
+        $('#data_table').bootstrapTable('refreshOptions',{});
+    });
+</script>

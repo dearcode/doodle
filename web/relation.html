@@ -1,0 +1,275 @@
+<div class="toplink">
+    <div class="container">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        <a target="_parent" href="?action=service&page=service" >服务管理</a>
+        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+        <a href="#" onclick="jumpToInterface()">接口管理</a>
+        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+        <a href="#" onclick="jumpToVariable()">参数管理</a>
+        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+        <span class="active" id="link_title"></span>
+    </div> 
+</div>
+<div class="container" >
+    <p>
+    <button type="button" class="btn btn-success" onclick="newRelation()">授权应用</button>
+    </p>
+    <table id="data_table"  
+        data-toggle="table"
+        data-url="relation/"
+        data-pagination="true"
+        data-side-pagination="server"
+        data-sort-order="desc"
+        data-query-params="queryParams"
+        data-page-list="[5, 10, 20, 50, 100, 200]"
+        style="word-break:break-all; word-wrap:break-all;"
+        >
+        <thead>
+            <tr>
+                <th data-field= 'ApplicationName' data-sortable="true" >应用</th>
+                <th data-field= 'ApplicationUser' data-sortable="true">应用接口人</th>
+                <th data-field= 'ApplicationEmail' data-sortable="true">邮箱</th>
+                <th data-field= 'Mtime' data-sortable="true">时间</th>
+                <th data-formatter="actionFormatter" data-events="actionEvents">操作</th>
+            </tr>
+        </thead>
+
+    </table>
+
+
+    <div class="modal fade" id="application_dialog" style="z-index:2000">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title" >授权应用</h4>
+                </div>
+                <div class="modal-body" id="modal_content">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">应用检索</div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">应用</div>
+                                    <input class="form-control" type="text" id="appName" name="appName" placeholder="根据应用名称搜索">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">邮箱</div>
+                                    <input class="form-control" type="text" id="appEmail" name="appEmail" placeholder="根据应用所有者邮箱搜索">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success" onclick="findApp()">查找</button>
+                        </div>
+                    </div>
+
+                    <form class="form-horizontal" role="form" id="form_application" >
+                        <table id="app_table"  
+                            data-toggle="table"
+                            data-url="application/infos"
+                            data-pagination="true"
+                            data-cache="false"
+                            data-side-pagination="server"
+                            data-sort-order="desc"
+                            data-query-params="queryAppParams"
+                            data-page-size ="5"
+                            data-click-to-select="true"
+                            >
+                            <thead>
+                                <tr>
+                                    <th data-field="state" data-checkbox="true"></th>
+                                    <th data-field= 'Name' data-sortable="true" >应用</th>
+                                    <th data-field= 'User' data-sortable="true">应用接口人</th>
+                                    <th data-field= 'Email' data-sortable="true">邮箱</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
+                    <button type="button" class="btn btn-primary" onclick="submitApp()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var serviceID = requestParse("serviceID");
+    var interfaceID = requestParse("interfaceID");
+
+    function jumpToInterface() {
+        window.parent.location = "?action=service&page=interface&serviceID="+serviceID;
+    }
+    function jumpToVariable() {
+        window.parent.location = "?action=service&page=variable&serviceID="+serviceID+"&interfaceID="+interfaceID;
+    }
+
+    //添加关联列表的连接
+    function serviceFormatter(value, row, index) {
+        return '<a href="?action=application&page=interface&serviceID='+row.ServiceID+'" target="_parent">'+value+'</a> ';
+    }
+
+    function interfaceFormatter(value, row, index) {
+        return '<a href="?action=application&page=variable&serviceID='+row.ServiceID+'&interfaceID='+row.InterfaceID+'" target="_parent">'+value+'</a> ';
+    }
+
+    //添加`操作`列对应事件
+    function actionFormatter(value, row, index) {
+        return '<a class="delete glyphicon glyphicon-trash" href="javascript:void(0)" title="删除"></a>';
+    }
+
+
+
+
+    var confirmID = 0;
+    //显示删除应用确认对话框
+    function deleteDialog(e, value, row, index) {
+        confirmID = row.ID;
+        $("#confirm_modal_title").html("解除授权");
+        $("#confirm_modal_content").html("<h4>确定要删除对<code>"+row.ApplicationName+"</code>的授权</h4>");
+        $("#confirm_dialog").modal('show');
+    }
+
+    function doConfirm() {
+        $("#confirm_dialog").modal('hide');
+        if (confirmID == 0) {
+            return;
+        }
+
+        $.ajax({
+            type: "DELETE",
+            url: "relation/?id="+confirmID, 
+            async: false,
+            success: function(data,status) { 
+                showMessage("<h3>成功</h3>");
+                $('#data_table').bootstrapTable('refreshOptions',{pageNumber: 1,offset:0});
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    $('#application_dialog').on('hidden.bs.modal', function (e) {
+        $("#form_application").each(function() {   
+            this.reset();   
+        });   
+    })
+
+    var queryName, queryEmail;
+
+    function findApp() {
+        queryName = $("#appName").val();
+        queryEmail = $("#appEmail").val();
+        $('#app_table').bootstrapTable('refreshOptions',{pageNumber:1, offset:0});
+    }
+
+    function newRelation() {
+        $("#modal_title").html("应用授权");
+        $("#application_dialog").modal('show');
+        $('#app_table').bootstrapTable('refreshOptions',{pageNumber:1, offset:0});
+    }
+
+    //添加的数据
+    function submitApp() {
+        var result;
+        var count = 0;
+
+        $("#app_table").bootstrapTable('getAllSelections').forEach(function(e) { count++; });
+        if (count == 0)  {
+            showMessage("没选择任务服务");
+            return;
+        }
+
+        $("#app_table").bootstrapTable('getAllSelections').forEach(function(e) {
+            var data = "interfaceID="+interfaceID+"&appID="+e.ID; 
+            $.ajax({
+                type: "POST",
+                url: "relation/",
+                data: data,
+                async: false,
+                success: function(data,status) { 
+                    if (data.Status == 0) {
+                        return;
+                    }
+                    result = data;
+                },
+                error: function(req, data, error) { 
+                    result = req.responseText;
+                },
+            });
+            if (result != null) {
+                showMessage("<h3>失败:"+result.Message+"</h3>");
+                return false;
+            }
+        });
+
+        if (result == null) {
+            $("#application_dialog").modal('hide');
+            showMessage("<h3>添加成功</h3>");
+            $('#data_table').bootstrapTable('refreshOptions',{});
+        }
+    }
+
+
+    window.actionEvents = {
+        'click .delete': deleteDialog,
+    };
+
+
+    function loadInterfaceInfo() {
+        $.ajax({
+            type: "GET",
+            url: "interface/info?id="+interfaceID,
+            async: false,
+            success: function(data,status) { 
+                $("#link_title").html(data.Name);
+                $("#interfaceID").val(data.ID);
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+
+    function loadService() {
+        $.ajax({
+            type: "GET",
+            url: "service/?order=desc&offset=0&limit=0",
+            async: false,
+            success: function(data,status) { 
+                $.each(data.rows, function (i, item) {  
+                    $("#serviceID").append('<option value ="'+item.ID+'">'+item.Name+'</option>');
+                });  
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>"+error);
+            },
+        });
+    }
+
+
+    function queryParams(params) {
+        params.interfaceID = interfaceID;
+        return params; 
+    }
+
+    function queryAppParams(params) {
+        params.interfaceID = interfaceID;
+        params.name = queryName;
+        params.email = queryEmail;
+        return params; 
+    }
+
+
+    $(function (){
+        $('#data_table').bootstrapTable('refreshOptions',{});
+        loadService();
+        loadInterfaceInfo();
+    })
+</script>

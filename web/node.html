@@ -1,0 +1,264 @@
+<div class="toplink">
+    <div class="container" id="top_link">
+    </div> 
+</div>
+<div class="container" >
+    <p id="admin_toolbar" style="display:none">
+    <button type="button" class="btn btn-success" onclick="newModel()">添加节点</button>
+    </p>
+    <table id="data_table"  
+        data-toggle="table"
+        data-pagination="true"
+        data-url="cluster/node/"
+        data-side-pagination="client"
+        data-sort-order="desc"
+        data-row-style="rowStyle"
+        data-page-list="[10, 20, 50, 100, 200]"
+        data-query-params="queryParams"
+        style="word-break:break-all; word-wrap:break-all;"
+        >
+        <thead>
+            <tr>
+                <th data-field= 'Server' data-sortable="true">节点</th>
+                <th data-field= 'Comment'>备注</th>
+                <th data-field= 'Mtime' data-sortable="true">时间</th>
+                <th data-formatter="actionFormatter" data-events="actionEvents">操作</th>
+            </tr>
+        </thead>
+
+    </table>
+
+
+    <div class="modal fade" id="model_dialog" style="z-index:2000">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title">添加节点</h4>
+                </div>
+                <div class="modal-body" id="modal_content">
+                    <form class="form-horizontal" role="form" id="model_form" >
+                        <div class="control-group">
+                            <label class="control-label">节点</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="server" name="server" maxlength="32" oninput="onInput()" value="" placeholder="节点IP, 必填" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">备注</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="comment" name="comment" value="" placeholder="备注信息, 必填"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
+                    <button type="button" class="btn btn-primary" onclick="submitModel()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var clusterID = requestParse("cluster_id");
+    var action = requestParse("action");
+    var serviceID = requestParse("serviceID");
+    var resourceID = requestParse("resourceID");
+    var roleInfo;
+
+
+    //添加`操作`列对应事件
+    function actionFormatter(value, row, index) {
+        return '<a class="edit glyphicon glyphicon-pencil" href="javascript:void(0)" title="修改"></a>'+
+        '&nbsp;&nbsp;'+
+        '<a class="delete glyphicon glyphicon-trash" href="javascript:void(0)" title="删除"></a>' ;
+    }
+
+
+    var modifyID = 0;
+    //显示修改应用对话框
+    function modifyDialog(e, value, row, index) {
+        modifyID = row.UserID;
+        $(".modal #name").val(row.UserName);
+        $(".modal #email").val(row.UserEmail);
+
+        $("#modal_title").html("修改角色信息");
+        $("#model_dialog").modal('show');
+    }
+
+    var confirmID = 0;
+    var confirmEmail = "";
+    //显示删除应用确认对话框
+    function deleteDialog(e, value, row, index) {
+        confirmID = row.ID;
+        confirmEmail = row.UserEmail;
+        $("#confirm_modal_title").html("确认要删除以下内容？");
+        $("#confirm_modal_content").html("<h4>"+row.UserName+"</h4>");
+        $("#confirm_dialog").modal('show');
+    }
+
+
+    function doConfirm() {
+        $("#confirm_dialog").modal('hide');
+        if (confirmID == 0) {
+            return;
+        }
+
+        $.ajax(
+        {
+            type: "DELETE",
+            url: "cluster/node/?id="+confirmID, 
+            async: false,
+            success: function(data,status) { 
+                if (data.Status != 0) {
+                    showMessage("<h3>"+data.Message+"</h3>");
+                    return;
+                }
+                showMessage("<h3>成功</h3>");
+                $('#data_table').bootstrapTable('refreshOptions',{pageNumber: 1,offset:0});
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    function modelReset() {
+        $("#model_form").each(function() {   
+            this.reset();   
+        });   
+    }
+
+    $('#model_dialog').on('hidden.bs.modal', function (e) {
+        modelReset();
+    })
+
+    function newModel() {
+        modifyID = 0;
+        $(".modal #name").val("");
+        $(".modal #email").val("");
+
+        $("#modal_title").html("添加节点");
+        $("#model_dialog").modal('show');
+    }
+
+    //提交修改or添加的数据
+    function submitModel() {
+        if(checkEmpty($(".modal #server").val())) {
+            showMessage("server 不能为空");
+            return;
+        }
+
+        url = "cluster/node/?cluster_id=" + clusterID;
+        method = "POST";
+        if (modifyID != 0) {
+            url += "&id="+modifyID;
+            method = "PUT";
+        }
+
+        var data = $("#model_form").serialize(); 
+        $.ajax(
+        {
+            type: method,
+            url: url,
+            data: data,
+            async: false,
+            success: function(data,status) { 
+                if (data.Status == 0) 
+                {
+                    $("#model_dialog").modal('hide');
+                    showMessage("<h3>成功</h3>");
+                    $('#data_table').bootstrapTable('refreshOptions',{pageNumber: 1,offset:0});
+                    modelReset();
+                } 
+                else {
+                    showMessage("<h3>失败:"+data.Message+"</h3>");
+                }
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>失败:"+req.responseText+"</h3>"+error);
+            },
+        });
+    }
+
+
+    window.actionEvents = {
+        'click .edit ': modifyDialog,
+        'click .delete': deleteDialog,
+    };
+
+    function queryParams(params) {
+        params.cluster_id = clusterID;
+        return params; 
+    }
+
+    function rowStyle(row, index) {
+        if (row.UserID == row.AdminID){
+            return { classes: 'success'};
+        }
+        //'active' 'success', 'info', 'warning', 'danger'
+        return {};
+    }
+
+    function initTopLink() {
+        if (action == "service") {
+            $("#top_link").html(
+            '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>' +
+            '<a target="_parent" href="?action=service&page=service" >服务管理</a>' +
+            '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+            '<a target="_parent" href="?action=service&page=interface&serviceID='+serviceID+'" >接口管理</a>' +
+            '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+            '<a target="_parent" href="?action=service&page=resource&serviceID='+serviceID+'&resourceID='+resourceID+'" >权限管理</a>' +
+            '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+            '<span class="active" id="link_title"></span>'
+            );
+        }
+        else {
+            $("#top_link").html(
+            '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>' +
+            '<a target="_parent" href="?action=role&page=role" >权限管理</a>' +
+            '<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>' +
+            '<span class="active" id="link_title"></span>'
+            );
+        }
+    }
+
+
+    function loadClusterInfo() {
+        $.ajax({
+            type: "GET",
+            url: "cluster/info/?id="+clusterID,
+            async: false,
+            success: function(data,status) { 
+                if (data.Status != 0 ) {
+                    showMessage("<h3> loadClusterInfo error: "+data.Message+"</h3>");
+                    return;
+                }
+                roleInfo = data.Data;
+                $("#link_title").html(roleInfo.Name);
+                $(document).attr("title","接口平台 - "+roleInfo.Name);
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3> call loadClusterInfo error:"+req.responseText+"</h3>");
+            },
+        });
+    }
+
+    function initToolbar() {
+        if (account.IsAdmin || roleInfo.AdminID == roleInfo.userID) {
+            $("#admin_toolbar").show();
+        }
+    }
+
+
+    $(function (){
+        initTopLink();
+        loadClusterInfo();
+        initToolbar();
+
+        $('#data_table').bootstrapTable('refreshOptions',{});
+    })
+</script>

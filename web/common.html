@@ -1,0 +1,60 @@
+<div class="modal fade" id="message_dialog" style="z-index:3000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="message_modal_title" >提示</h4>
+            </div>
+            <div class="modal-body" id="message_modal_content">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirm_dialog" style="z-index:3000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="confirm_modal_title" ></h4>
+            </div>
+            <div class="modal-body" id="confirm_modal_content">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
+                <button type="button" class="btn btn-danger" onclick="doConfirm()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="message_box"  style="z-index:3000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="message_title" ></h4>
+            </div>
+            <div class="modal-body" id="message_content">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showMessage(content) {
+        $("#message_modal_content").html(content);
+        $("#message_dialog").modal('show');
+        console.trace();
+    }
+
+    function showMessageAlert(title, content) {
+        $("#message_title").html(title);
+        $("#message_content").html(content);
+        $("#message_box").modal('show');
+    }
+</script>

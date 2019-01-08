@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>用户登录</title>
+
+        <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/js/md5.min.js"></script>
+
+        <link rel='stylesheet prefetch' href='/static/css/bootstrap.min.css'>
+        <link rel="stylesheet" href="/static/css/style.css">
+
+    </head>
+
+    <body>
+
+        <div class="wrapper">
+            <div class="form-signin" >
+                <h2 class="form-signin-heading">Please login</h2>
+                <input type="text" class="form-control" name="Name" id="Name" placeholder="Email Address" required="" autofocus="" value="{{.Name}}" />
+                <input type="password" class="form-control" name="Password" id="Password" placeholder="Password" required="" value="{{.Password}}" />      
+                <button class="btn btn-lg btn-primary btn-block" onclick="do_login()">Login</button>   
+            </div>
+        </div>
+
+        <script>
+            callback="{{.Callback}}";
+
+            function do_login()
+            {
+                var name = $("#Name").val();
+                var salt = new Date().getTime();
+                var passwd = md5($("#Password").val());
+                passwd = md5(passwd + salt);
+
+                data = "Name="+name+"&Password="+passwd+"&Salt="+salt;
+
+                $.ajax(
+                {
+                    type: "POST",
+                    url: "/authorize/",
+                    async: false,
+                    data: data,
+                    success: function(data,status) { 
+                        if (data.Status != 0) {
+                            alert(data.Message);
+                            return
+                        }
+
+                        if (callback.indexOf("?") == -1) {
+                            callback += "?";
+                        }
+                        else {
+                            callback += "&";
+                        }
+
+                        url = callback + "token=" + data.Data;
+                        console.log("url:", url);
+                        location.href = url;
+                    },
+                    error: function(req, data, error) { 
+                        alert(req.responseText);
+                    },
+                });
+            }
+
+        </script>
+
+    </body>
+
+</html>
+
