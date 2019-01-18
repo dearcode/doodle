@@ -149,9 +149,9 @@ func (s *Service) Start() {
 }
 
 //SetError 返回错误信息.
-func (h *ResponseHeader) SetError(status int, message string) {
+func (h *ResponseHeader) SetError(status int, format string, argv ...interface{}) {
 	h.Status = status
-	h.Message = message
+	h.Message = fmt.Sprintf(format, argv...)
 }
 
 //InvalidRequest 返回因为请求参数错误导致的异常信息(400).
