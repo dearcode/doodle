@@ -169,10 +169,16 @@ func (s *Stmt) SQLColumn(rt reflect.Type, table string) string {
 		case reflect.Struct:
 			if f.Tag.Get("db_table") == "one" {
 				s.table += ","
-				s.table += str.FieldEscape(f.Name)
-				bs.WriteString(s.SQLColumn(f.Type, str.FieldEscape(f.Name)))
 				field := str.FieldEscape(f.Name)
-				s.addWhere(fmt.Sprintf("%s.%s_id = %s.id", table, field, field))
+				s.table += field
+				bs.WriteString(s.SQLColumn(f.Type, str.FieldEscape(f.Name)))
+
+				if rf := f.Tag.Get("db_relation_field"); rf != "" {
+					s.addWhere(fmt.Sprintf("%s.%s = %s.id", table, rf, field))
+				} else {
+					s.addWhere(fmt.Sprintf("%s.%s_id = %s.id", table, field, field))
+				}
+
 				continue
 			}
 		case reflect.Slice:
@@ -459,6 +465,11 @@ func (s *Stmt) SQLUpdate(rt reflect.Type, rv reflect.Value) (sql string, refs []
 		name := rt.Field(i).Tag.Get("db")
 		if name == "" {
 			name = str.FieldEscape(rt.Field(i).Name)
+		}
+
+		if cst := rt.Field(i).Tag.Get("db_const"); cst != "" {
+			fmt.Fprintf(bs, "`%s`=%s, ", name, cst)
+			continue
 		}
 
 		fmt.Fprintf(bs, "`%s`=?, ", name)
