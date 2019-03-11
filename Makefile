@@ -22,7 +22,7 @@ megacheck:
 lint: golint megacheck
 	for path in $(source); do golint "$$path..."; done;
 	for path in $(source); do gofmt -s -l -w $$path;  done;
-	go tool vet $(source) 2>&1
+	go vet ./...
 	megacheck ./...
 
 

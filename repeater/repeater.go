@@ -82,12 +82,12 @@ func (r *repeater) GetInterface(req *http.Request, id string) (app *meta.Applica
 
 	//如果不需要验证权限，直接通过
 	if !iface.Service.Validate {
-		log.Debugf("%s project:%v validate is flase, app:%v", id, id, iface.Service, app)
+		log.Debugf("%s interface:%v validate is flase, app:%v", id, iface, app)
 		return
 	}
 
 	if err = dc.validateRelation(app.ID, iface.ID); err == nil {
-		log.Debugf("%s project:%v iface:%v app:%v", id, iface, app)
+		log.Debugf("%s interface:%v app:%v", id, iface, app)
 		return
 	}
 

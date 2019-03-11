@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/dearcode/doodle",
-	"GoVersion": "go1.11",
+	"GoVersion": "go1.12",
 	"GodepVersion": "v80",
 	"Packages": [
 		"./..."
@@ -38,53 +38,53 @@
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/cache",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/config",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/http/client",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/http/server",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/log",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/meta",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/orm",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/util/aes",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/util/str",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/validation",
-			"Comment": "v1.9.0-2-g1f4e72c",
-			"Rev": "1f4e72cf8771926b6c6d6e81c6e1dd180edc0ddd"
+			"Comment": "v1.9.0-4-g273717e",
+			"Rev": "273717e49d92304f35e1bdb50639749ec1b58b43"
 		},
 		{
 			"ImportPath": "github.com/go-sql-driver/mysql",

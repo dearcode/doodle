@@ -144,7 +144,7 @@ func SendResponse(w http.ResponseWriter, status int, f string, args ...interface
 	w.Header().Add("Content-Type", "application/json")
 	r := meta.Response{Status: status, Message: f}
 	if len(args) > 0 {
-		r.Message = fmt.Sprintf(f, args)
+		r.Message = fmt.Sprintf(f, args...)
 	}
 
 	buf, _ := json.Marshal(&r)
