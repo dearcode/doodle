@@ -75,13 +75,8 @@ func (rr *rbacRoleResource) GET(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(rs) == 0 {
-		server.SendResponse(w, http.StatusNotFound, "not found")
-		log.Infof("RelationGet not found, vars:%+v", vars)
-		return
-	}
-
 	log.Infof("vars:%+v", vars)
+
 	if vars.API == 1 {
 		server.SendResponseData(w, rs)
 		return
