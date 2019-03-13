@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.9.2
+FROM docker.io/golang:1.12
 
 copy src src
 

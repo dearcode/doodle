@@ -7,10 +7,13 @@ type node struct {
 }
 
 type cluster struct {
-	ID      int64
-	Name    string
-	Comment string
-	Node    []node `db_table:"one2more"`
-	Ctime   string `db_default:"now()"`
-	Mtime   string `db_default:"now()"`
+	ID             int64
+	Name           string
+	Comment        string
+	ServerUser     string
+	ServerPassword string
+	ServerKey      string
+	Node           []node `db_table:"one2more"`
+	Ctime          string `db_default:"now()"`
+	Mtime          string `db_default:"now()"`
 }

@@ -63,6 +63,7 @@ func (a *account) GET(w http.ResponseWriter, r *http.Request) {
 		server.SendResponse(w, http.StatusBadRequest, err.Error())
 		return
 	}
+	defer db.Close()
 
 	id, t, err := a.parseToken(vars.Token)
 	if err != nil {

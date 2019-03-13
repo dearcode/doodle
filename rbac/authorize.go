@@ -38,6 +38,7 @@ func (a authorize) POST(w http.ResponseWriter, r *http.Request) {
 		server.Abort(w, "connect db error")
 		return
 	}
+	defer db.Close()
 
 	var ac account
 

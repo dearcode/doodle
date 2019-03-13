@@ -63,11 +63,11 @@ func newTask(serviceID int64) (*task, error) {
 		return nil, errors.Trace(err)
 	}
 
-	if err = orm.NewStmt(db, "service").Where("service.id=%v", serviceID).Query(&p); err != nil {
+	if err = orm.NewStmt(db, "service").SetLogger(log.GetLogger()).Where("service.id=%v", serviceID).Query(&p); err != nil {
 		return nil, errors.Trace(err)
 	}
 
-	if err = orm.NewStmt(db, "node").Where("cluster_id=%d", p.Cluster.ID).Query(&p.Cluster.Node); err != nil {
+	if err = orm.NewStmt(db, "node").SetLogger(log.GetLogger()).Where("cluster_id=%d", p.Cluster.ID).Query(&p.Cluster.Node); err != nil {
 		return nil, errors.Trace(err)
 	}
 
@@ -208,9 +208,9 @@ func (t *task) install() error {
 	for _, n := range t.service.Cluster.Node {
 		app := w.get(key, n.Server)
 		cmd = fmt.Sprintf("./install.sh %s %d %s", t.service.Name, app.PID, config.Distributor.ETCD.Hosts)
-		sc, err := ssh.NewClient(n.Server, 22, "jeduser", "", config.Distributor.SSH.Key)
+		sc, err := ssh.NewClient(n.Server, 22, t.service.Cluster.ServerUser, t.service.Cluster.ServerPassword, t.service.Cluster.ServerKey)
 		if err != nil {
-			return errors.Trace(err)
+			return errors.Annotatef(err, "user:%v password:%v key:%v", t.service.Cluster.ServerUser, t.service.Cluster.ServerPassword, t.service.Cluster.ServerKey)
 		}
 
 		log.Debugf("%v begin, upload install script", t)

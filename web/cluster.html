@@ -21,6 +21,7 @@
             <tr>
                 <th data-field= 'Name' data-sortable="true" data-formatter="nameFormatter">集群名</th>
                 <th data-field= 'Role' data-sortable="true"  data-formatter="roleNameFormatter">角色</th>
+                <th data-field= 'ServerUser' data-sortable="true">服务器帐号</th>
                 <th data-field= 'Comment' data-sortable="true">备注</th>
                 <th data-field= 'Mtime' data-sortable="true">时间</th>
                 <th data-formatter="actionFormatter" data-events="actionEvents">操作</th>
@@ -42,6 +43,24 @@
                             <label class="control-label">名称</label>
                             <div class="controls">
                                 <input type="text" class="form-control" id="name" name="name" maxlength="32" oninput="onInput()" value="" placeholder="集群名称, 中文, 必填" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">服务器帐号</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="server_user" name="server_user" maxlength="32" value="" placeholder="SSH帐号, 必填" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">服务器密码</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="server_password" name="server_password" maxlength="32" value="" placeholder="SSH密码, 选填|或配置私钥" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">服务器私钥</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="server_key" name="server_key" maxlength="512" value="" placeholder="SSH私钥, 选填|或配置密码" />
                             </div>
                         </div>
                         <div class="control-group">
@@ -104,6 +123,9 @@
         modifyID = row.ID;
         $(".modal #name").val(row.Name);
         $(".modal #user").val(row.User);
+        $(".modal #server_user").val(row.ServerUser);
+        $(".modal #server_password").val(row.ServerPassword);
+        $(".modal #server_key").val(row.ServerKey);
         $(".modal #email").val(row.Email);
         $(".modal #comment").val(row.Comment);
 
@@ -168,6 +190,9 @@
     function newModel() {
         modifyID = 0;
         $(".modal #name").val("");
+        $(".modal #server_user").val("");
+        $(".modal #server_password").val("");
+        $(".modal #server_key").val("");
         $(".modal #user").val(account.fullname);
         $(".modal #email").val(account.email);
         $(".modal #comment").val("");

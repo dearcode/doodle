@@ -22,15 +22,18 @@ type node struct {
 
 //cluster 集群基本信息.
 type cluster struct {
-	ID      int64
-	Name    string
-	RoleID  int64
-	User    string
-	Email   string
-	Comment string
-	Node    []node `db_table:"one2more"`
-	Ctime   string `db_default:"auto"`
-	Mtime   string `db_default:"auto"`
+	ID             int64
+	Name           string
+	ServerUser     string
+	ServerPassword string
+	ServerKey      string
+	RoleID         int64
+	User           string
+	Email          string
+	Comment        string
+	Node           []node `db_table:"one2more"`
+	Ctime          string `db_default:"auto"`
+	Mtime          string `db_default:"auto"`
 }
 
 func (c *cluster) GET(w http.ResponseWriter, r *http.Request) {
@@ -60,13 +63,65 @@ func (c *cluster) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendData(w, cs)
 }
 
+func (c *cluster) PUT(w http.ResponseWriter, r *http.Request) {
+	vars := struct {
+		ID             int64  `json:"id"`
+		Name           string `json:"name"`
+		User           string `json:"user"`
+		RoleID         int64  `json:"role"`
+		Email          string `json:"email"`
+		ServerUser     string `json:"server_user"`
+		ServerPassword string `json:"server_password"`
+		ServerKey      string `json:"server_key"`
+		Comment        string `json:"comment"`
+	}{}
+
+	u, err := session.User(w, r)
+	if err != nil {
+		log.Errorf("session.User error:%v, req:%v", errors.ErrorStack(err), r)
+		util.SendResponse(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err = util.DecodeRequestValue(r, &vars); err != nil {
+		util.SendResponse(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if !u.IsAdmin {
+		vars.User = u.User
+		vars.Email = u.Email
+	}
+
+	db, err := mdb.GetConnection()
+	if err != nil {
+		log.Errorf("GetConnection req:%+v, error:%s", r, errors.ErrorStack(err))
+		util.SendResponse(w, http.StatusInternalServerError, "连接数据库出错")
+		return
+	}
+	defer db.Close()
+
+	ra, err := orm.NewStmt(db, "cluster").Where("id=%v", vars.ID).Update(&vars)
+	if err != nil {
+		log.Errorf("add cluster req:%+v, user:%+v error:%s", r, u, errors.ErrorStack(err))
+		util.SendResponse(w, http.StatusInternalServerError, "query db error")
+		return
+	}
+
+	log.Debugf("user:%v, update cluster:%v, rowsAffect:%v", u, vars, ra)
+	server.SendResponseData(w, ra)
+}
+
 func (c *cluster) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
-		Name    string `json:"name"`
-		User    string `json:"user"`
-		RoleID  int64  `json:"role"`
-		Email   string `json:"email"`
-		Comment string `json:"comment"`
+		Name           string `json:"name"`
+		User           string `json:"user"`
+		RoleID         int64  `json:"role"`
+		Email          string `json:"email"`
+		ServerUser     string `json:"server_user"`
+		ServerPassword string `json:"server_password"`
+		ServerKey      string `json:"server_key"`
+		Comment        string `json:"comment"`
 	}{}
 
 	u, err := session.User(w, r)

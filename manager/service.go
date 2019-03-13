@@ -188,14 +188,15 @@ func (p *service) POST(w http.ResponseWriter, r *http.Request) {
 
 func (p *service) PUT(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
-		ID      int64  `json:"id" valid:"Required"`
-		Name    string `json:"name"  valid:"Required"`
-		User    string `json:"user"  valid:"Required"`
-		Email   string `json:"email"  valid:"Email"`
-		Path    string `json:"path"  valid:"AlphaNumeric"`
-		Source  string `json:"source"`
-		Version int    `json:"version"`
-		Comment string `json:"comment"  valid:"Required"`
+		ID        int64  `json:"id" valid:"Required"`
+		Name      string `json:"name"  valid:"Required"`
+		User      string `json:"user"  valid:"Required"`
+		Email     string `json:"email"  valid:"Email"`
+		Path      string `json:"path"  valid:"AlphaNumeric"`
+		ClusterID int64  `json:"cluster_id"`
+		Source    string `json:"source"`
+		Version   int    `json:"version"`
+		Comment   string `json:"comment"  valid:"Required"`
 	}{}
 	u, err := session.User(w, r)
 	if err != nil {
@@ -214,13 +215,21 @@ func (p *service) PUT(w http.ResponseWriter, r *http.Request) {
 		vars.User = u.User
 	}
 
-	if err := updateService(vars.ID, vars.Name, vars.User, vars.Email, vars.Path, vars.Comment, vars.Source, vars.Version); err != nil {
+	db, err := mdb.GetConnection()
+	if err != nil {
 		util.SendResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
+
+	ra, err := orm.NewStmt(db, "service").Where("id=%v", vars.ID).Update(&vars)
+	if err != nil {
+		util.SendResponse(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	util.SendResponse(w, 0, "")
 
-	log.Debugf("update service success, new:%+v", vars)
+	log.Debugf("update service success:%v, new:%+v", ra, vars)
 }
 
 func getServiceResourceID(serviceID int64) (int64, error) {
