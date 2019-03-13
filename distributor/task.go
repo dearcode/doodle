@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/dearcode/crab/log"
@@ -35,7 +36,8 @@ const (
 )
 
 var (
-	scripts = []string{"build.sh", "Dockerfile.tpl", "install.sh"}
+	scripts   = []string{"build.sh", "Dockerfile.tpl", "install.sh"}
+	taskIDInc = uint32(0)
 )
 
 type task struct {
@@ -48,6 +50,10 @@ type task struct {
 	state   int
 	logID   int64
 }
+
+const (
+	buildPathFormat = "20060102_150405"
+)
 
 func newTask(serviceID int64) (*task, error) {
 	var p service
@@ -67,7 +73,7 @@ func newTask(serviceID int64) (*task, error) {
 
 	log.Debugf("service:%#v", p)
 
-	path := fmt.Sprintf("%s/%v", config.Distributor.Server.BuildPath, time.Now().UnixNano())
+	path := fmt.Sprintf("%s/%v_%v", config.Distributor.Server.BuildPath, time.Now().Format(buildPathFormat), atomic.AddUint32(&taskIDInc, 1))
 	if err = os.MkdirAll(path, os.ModePerm); err != nil {
 		return nil, errors.Annotatef(err, path)
 	}
