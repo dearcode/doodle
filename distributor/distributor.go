@@ -19,8 +19,8 @@ type distributorLogs struct {
 
 type distributor struct {
 	ID         int64
-	ProjectID  int64
-	Project    project `db_table:"one"`
+	ServiceID  int64
+	Service    service `db_table:"one"`
 	State      int
 	Server     string
 	CreateTime string `db_default:"now()"`
@@ -29,7 +29,7 @@ type distributor struct {
 //GET 编译并更新指定项目.
 func (d *distributor) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
-		ProjectID int64 `json:"id"`
+		ServiceID int64 `json:"id"`
 	}{}
 
 	if err := server.ParseURLVars(r, &vars); err != nil {
@@ -37,7 +37,7 @@ func (d *distributor) GET(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := newTask(vars.ProjectID)
+	t, err := newTask(vars.ServiceID)
 	if err != nil {
 		log.Errorf("newWorkspace error:%v", errors.ErrorStack(err))
 		server.SendResponse(w, http.StatusBadRequest, err.Error())
@@ -54,7 +54,7 @@ func (d *distributor) GET(w http.ResponseWriter, r *http.Request) {
 //POST 编译并更新指定项目.
 func (d *distributor) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
-		ProjectID int64 `json:"id"`
+		ServiceID int64 `json:"id"`
 	}{}
 
 	if err := server.ParseURLVars(r, &vars); err != nil {
@@ -62,7 +62,7 @@ func (d *distributor) POST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := newTask(vars.ProjectID)
+	t, err := newTask(vars.ServiceID)
 	if err != nil {
 		log.Errorf("newWorkspace error:%v", errors.ErrorStack(err))
 		server.SendResponse(w, http.StatusBadRequest, err.Error())

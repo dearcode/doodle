@@ -6,7 +6,7 @@ import (
 	"github.com/dearcode/doodle/distributor/config"
 )
 
-func TestProjectKey(t *testing.T) {
+func TestServiceKey(t *testing.T) {
 	//TODO 这个测试不需要跑，以后把代码合并后再跑
 	config.Distributor.Server.SecretKey = "1qaz@WSX"
 	ds := []struct {
@@ -17,7 +17,7 @@ func TestProjectKey(t *testing.T) {
 		{"+61FUC7/V/QxeZzpXV37e3jDOXEcAN3TXwFavJ1Ek9E=", 1234},
 	}
 
-	p := &project{}
+	p := &service{}
 	for _, data := range ds {
 		p.ID = data.id
 		if key := p.key(); key != data.key {

@@ -43,21 +43,21 @@ type task struct {
 	ID      string
 	path    string
 	db      *sql.DB
-	project project
+	service service
 	d       distributor
 	state   int
 	logID   int64
 }
 
-func newTask(projectID int64) (*task, error) {
-	var p project
+func newTask(serviceID int64) (*task, error) {
+	var p service
 
 	db, err := mdb.GetConnection()
 	if err != nil {
 		return nil, errors.Trace(err)
 	}
 
-	if err = orm.NewStmt(db, "project").Where("project.id=%v", projectID).Query(&p); err != nil {
+	if err = orm.NewStmt(db, "service").Where("service.id=%v", serviceID).Query(&p); err != nil {
 		return nil, errors.Trace(err)
 	}
 
@@ -65,7 +65,7 @@ func newTask(projectID int64) (*task, error) {
 		return nil, errors.Trace(err)
 	}
 
-	log.Debugf("project:%#v", p)
+	log.Debugf("service:%#v", p)
 
 	path := fmt.Sprintf("%s/%v", config.Distributor.Server.BuildPath, time.Now().UnixNano())
 	if err = os.MkdirAll(path, os.ModePerm); err != nil {
@@ -81,7 +81,7 @@ func newTask(projectID int64) (*task, error) {
 	}
 
 	d := distributor{
-		ProjectID: projectID,
+		ServiceID: serviceID,
 		Server:    util.LocalAddr(),
 	}
 
@@ -90,7 +90,7 @@ func newTask(projectID int64) (*task, error) {
 		return nil, errors.Trace(err)
 	}
 
-	return &task{db: db, project: p, d: d, ID: uuid.String(), path: path}, nil
+	return &task{db: db, service: p, d: d, ID: uuid.String(), path: path}, nil
 }
 
 func (t *task) updateState(state int) {
@@ -190,18 +190,18 @@ func (t *task) install() error {
 	}
 	defer os.Chdir(oldPath)
 
-	tarFile := t.project.Name + ".tar.gz"
+	tarFile := t.service.Name + ".tar.gz"
 
-	cmd := fmt.Sprintf("tar -C bin -czf %s %s", tarFile, t.project.Name)
+	cmd := fmt.Sprintf("tar -C bin -czf %s %s", tarFile, t.service.Name)
 	if err := execSystemCmdWait(cmd, t.writeLogs); err != nil {
 		return errors.Annotatef(err, cmd)
 	}
 
-	key := t.project.Source[7:]
+	key := t.service.Source[7:]
 
-	for _, n := range t.project.Cluster.Node {
+	for _, n := range t.service.Cluster.Node {
 		app := w.get(key, n.Server)
-		cmd = fmt.Sprintf("./install.sh %s %d %s", t.project.Name, app.PID, config.Distributor.ETCD.Hosts)
+		cmd = fmt.Sprintf("./install.sh %s %d %s", t.service.Name, app.PID, config.Distributor.ETCD.Hosts)
 		sc, err := ssh.NewClient(n.Server, 22, "jeduser", "", config.Distributor.SSH.Key)
 		if err != nil {
 			return errors.Trace(err)
@@ -253,7 +253,7 @@ func (t *task) compile() error {
 	}
 	defer os.Chdir(oldPath)
 
-	cmd := fmt.Sprintf("./build.sh %s %s %s", t.project.Source, t.project.key(), t.project.Name)
+	cmd := fmt.Sprintf("./build.sh %s %s %s", t.service.Source, t.service.key(), t.service.Name)
 
 	if err = execSystemCmdWait(cmd, t.writeLogs); err != nil {
 		return errors.Annotatef(err, cmd)

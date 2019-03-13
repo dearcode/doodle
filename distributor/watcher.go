@@ -24,14 +24,14 @@ const (
 	apigatePrefix = "/api"
 )
 
-type service struct {
+type microService struct {
 	version int64
 	nodes   map[string]meta.MicroAPP
 }
 
 type watcher struct {
 	etcd     *etcd.Client
-	services map[string]service
+	services map[string]microService
 	mu       sync.RWMutex
 }
 
@@ -41,7 +41,7 @@ func newWatcher() (*watcher, error) {
 		return nil, errors.Annotatef(err, config.Distributor.ETCD.Hosts)
 	}
 
-	return &watcher{etcd: c, services: make(map[string]service)}, nil
+	return &watcher{etcd: c, services: make(map[string]microService)}, nil
 }
 
 func (w *watcher) start() {
@@ -99,11 +99,11 @@ func (w *watcher) load() error {
 type managerClient struct {
 }
 
-func (mc *managerClient) interfaceRegister(projectID, version int64, name, method, path, backend string, m document.Method) error {
+func (mc *managerClient) interfaceRegister(serviceID, version int64, name, method, path, backend string, m document.Method) error {
 	url := fmt.Sprintf("%sinterface/register/", config.Distributor.Manager.URL)
 	req := struct {
 		Name      string
-		ProjectID int64
+		ServiceID int64
 		Version   int64
 		Path      string
 		Method    server.Method
@@ -112,7 +112,7 @@ func (mc *managerClient) interfaceRegister(projectID, version int64, name, metho
 		Attr      document.Method
 	}{
 		Name:      name,
-		ProjectID: projectID,
+		ServiceID: serviceID,
 		Version:   version,
 		Path:      path,
 		Backend:   backend,
@@ -161,9 +161,9 @@ func (w *watcher) parseDocument(backend string, app meta.MicroAPP) error {
 
 	log.Debugf("doc:%+v", doc)
 
-	projectID, err := parseProjectID(app.ServiceKey)
+	serviceID, err := parseServiceID(app.ServiceKey)
 	if err != nil {
-		log.Errorf("parseProjectID:%s error:%v", app.ServiceKey, err)
+		log.Errorf("parseServiceID:%s error:%v", app.ServiceKey, err)
 		return errors.Annotatef(err, app.ServiceKey)
 	}
 
@@ -176,7 +176,7 @@ func (w *watcher) parseDocument(backend string, app meta.MicroAPP) error {
 	mc := managerClient{}
 	for ok, ov := range doc {
 		for mk, mv := range ov.Methods {
-			mc.interfaceRegister(projectID, version, ok+"_"+mk, mk, ov.URL, backend, mv)
+			mc.interfaceRegister(serviceID, version, ok+"_"+mk, mk, ov.URL, backend, mv)
 		}
 	}
 
@@ -201,7 +201,7 @@ func (w *watcher) online(backend string, app meta.MicroAPP) {
 
 	} else {
 		//如果后端接口不存在, 添加、注册
-		o = service{nodes: make(map[string]meta.MicroAPP)}
+		o = microService{nodes: make(map[string]meta.MicroAPP)}
 		o.nodes[app.Host] = app
 		log.Debugf("backend:%v, add host:%v, new app", backend, app.Host)
 	}
@@ -216,7 +216,7 @@ func (w *watcher) stop() {
 	w.etcd.Close()
 }
 
-func parseProjectID(key string) (int64, error) {
+func parseServiceID(key string) (int64, error) {
 	buf, err := aes.Decrypt(key, config.Distributor.Server.SecretKey)
 	if err != nil {
 		return 0, errors.Trace(err)
