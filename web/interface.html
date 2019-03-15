@@ -11,6 +11,7 @@
     <button type="button" class="btn btn-success" onclick="newInterface()">新建接口</button>
     <button type="button" class="btn btn-warning" onclick="roleManager()" id="btnrbac" style="display:none">权限管理</button>
     <button type="button" class="btn btn-info" onclick="nodeManager()" >服务节点</button>
+    <button type="button" class="btn btn-warning" onclick="configManager()" >配置管理</button>
     </p>
 
     <table id="data_table"  
@@ -122,6 +123,45 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div class="modal fade" id="config_dialog" style="z-index:2000">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal_title" >配置文件管理</h4>
+                </div>
+                <div class="modal-body" id="modal_content">
+                    <form class="form-horizontal" role="form" id="form_interface_config" >
+                        <div class="control-group">
+                            <label class="control-label">集群</label>
+                            <div class="controls">
+                                <select class="form-control" id="cluster_select" name="cluster_select">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">配置文件</label>
+                            <div class="controls">
+                                <input type="text" class="form-control" id="config_name" name="config_name" maxlength="64" value="" placeholder="配置文件名称" />
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">配置内容</label>
+                            <div class="controls">
+                                <textarea class="form-control" rows=10 id="config_content" name="config_content"  placeholder="配置文件正文"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">放弃</button>
+                    <button type="button" class="btn btn-primary" onclick="submitConfig()">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
     <div class="modal fade" id="node_dialog" style="z-index:2000">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -178,7 +218,7 @@
     function levelFormatter(value, row, index) {
         if (row.Level == 0 ){
             return "重要";
-        }else {
+            }else {
             return "普通";
         }
     }
@@ -195,6 +235,7 @@
     }
 
     var modifyID = 0;
+    var modifyConfigID = 0;
     //显示修改接口对话框
     function modifyDialog(e, value, row, index) {
         modifyID = row.ID;
@@ -232,7 +273,7 @@
 
         if(row.Level == 0){
             $("#level0").attr('checked',true);
-        }else{
+            }else{
             $("#level1").attr('checked',true);
         }
 
@@ -321,6 +362,10 @@
 
     function nodeManager() {
         $("#node_dialog").modal('show');
+    }
+
+    function configManager() {
+        $("#config_dialog").modal('show');
     }
 
     //提交修改or添加的数据
@@ -474,6 +519,46 @@
         if (account.IsAdmin || ((account.email != "" ) && (serviceInfo.email == account.email))) {
             $("#btnrbac").show();
         }
+    }
+
+    function submitConfig() {
+        if(checkEmpty($("#config_name").val())) {
+            showMessage("配置文件名不能为空");
+            return;
+        }
+        if(checkEmpty($("#config_content").val())) {
+            showMessage("配置文件内容不能为空");
+            return;
+        }
+
+        url = "interfaceConfig/";
+        method = "POST";
+        if (modifyConfigID != 0) {
+            url += "?id="+modifyConfigID;
+            method = "PUT";
+        }
+        var data = $("#form_interface_config").serialize(); 
+        $.ajax(
+        {
+            type: method,
+            url: url,
+            data: data,
+            async: false,
+            success: function(data, status) { 
+                if (data.Status == 0) {
+                    $("#config_dialog").modal('hide');
+                    showMessage("<h3>成功</h3>");
+                    $("#config_name").val("");
+                    $("#config_content").val("");
+                }
+                else {
+                    showMessage("<h3>"+data.Message+"</h3>");
+                }
+            },
+            error: function(req, data, error) { 
+                showMessage("<h3>"+req.responseText+"</h3>"+error);
+            },
+        });
     }
 
     $(function(){
