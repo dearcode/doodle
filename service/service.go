@@ -86,18 +86,15 @@ func (s *Service) Init() {
 //Register 注册接口.
 func (s *Service) Register(obj interface{}) error {
 	t := reflect.TypeOf(obj)
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+
 	name := t.Name()
 	pkg := t.PkgPath()
 
-	//不能脱壳，脱壳后取不到method.
-	if t.Kind() == reflect.Ptr {
-		name = t.Elem().Name()
-		pkg = t.Elem().PkgPath()
-	}
-
 	pkg = path.Base(pkg)
 	url := fmt.Sprintf("/%s/%s/", pkg, name)
-	log.Debugf("url:%v", url)
 
 	for _, k := range []string{"Get", "Post", "Put", "Delete"} {
 		if m, ok := t.MethodByName(k); ok {
