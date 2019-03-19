@@ -43,8 +43,8 @@ func transport(w http.ResponseWriter, r *http.Request, m reflect.Method) {
 	argv := []reflect.Value{reflect.New(m.Type.In(0)).Elem(), reqVal.Elem(), respVal}
 	m.Func.Call(argv)
 
-    if _, ok := r.URL.Query()["_v"]; ok {
-        b, _ := prettyjson.Marshal(respVal.Interface())
+	if _, ok := r.URL.Query()["_v"]; ok {
+		b, _ := prettyjson.Marshal(respVal.Interface())
 		w.Write(b)
 		w.Write([]byte("\n"))
 		return
