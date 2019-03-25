@@ -7,17 +7,17 @@ import (
 
 	"github.com/dearcode/crab/cache"
 	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/meta"
 	"github.com/dearcode/crab/orm"
 	"github.com/juju/errors"
 
 	"github.com/dearcode/doodle/manager/config"
+	"github.com/dearcode/doodle/rbac/meta"
 )
 
 type userDB struct {
 	admins *cache.Cache
 	res    *cache.Cache
-	uid    *cache.Cache
+	users  *cache.Cache
 	roles  *cache.Cache
 	sync.RWMutex
 }
@@ -26,7 +26,7 @@ func newUserDB() *userDB {
 	return &userDB{
 		admins: cache.NewCache(int64(config.Manager.Cache.Timeout)),
 		res:    cache.NewCache(int64(config.Manager.Cache.Timeout)),
-		uid:    cache.NewCache(int64(config.Manager.Cache.Timeout)),
+		users:    cache.NewCache(int64(config.Manager.Cache.Timeout)),
 		roles:  cache.NewCache(int64(config.Manager.Cache.Timeout)),
 	}
 }
@@ -62,7 +62,7 @@ func (u *userDB) isAdmin(email string) bool {
 	}{}
 
 	if err = orm.NewStmt(db, "admin").Where("email='%s'", email).Query(&admin); err != nil {
-		if errors.Cause(err) == meta.ErrNotFound {
+		if orm.IsNotFound(err) {
 			log.Debugf("%s not admin", email)
 			u.admins.Add(email, false)
 			return false
@@ -148,33 +148,26 @@ func (u *userinfo) assert(resID int64) error {
 }
 
 //loadUserID 查找用户ID.
-func (u *userDB) loadUserID(email string) (int64, error) {
-	u.RLock()
-	if uid := u.uid.Get(email); uid != nil {
-		u.RUnlock()
-		log.Debugf("email:%v, id cache:%v", email, uid.(int64))
-		return uid.(int64), nil
-	}
-	u.RUnlock()
-
+func (u *userDB) loadUser(email string) (meta.User, error) {
 	u.Lock()
 	defer u.Unlock()
 
-	if uid := u.uid.Get(email); uid != nil {
-		log.Debugf("email:%v, id cache:%v", email, uid.(int64))
-		return uid.(int64), nil
+	if cu := u.users.Get(email); cu != nil {
+		user := cu.(*meta.User)
+		log.Debugf("email:%v, user cache:%v", email, cu)
+		return *user, nil
 	}
 
-	info, err := rbacClient.GetUser(email)
+	user, err := rbacClient.GetUser(email)
 	if err != nil {
-		return 0, errors.Trace(err)
+		return meta.User{}, errors.Trace(err)
 	}
 
-	u.uid.Add(email, info.ID)
+	u.users.Add(email, &user)
 
-	log.Debugf("rbac email:%s, user:%+v", email, info)
+	log.Debugf("rbac email:%s, user:%+v", email, user)
 
-	return info.ID, nil
+	return user, nil
 }
 
 //loadRoles 查找用户所有角色.

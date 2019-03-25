@@ -31,6 +31,7 @@ func (s *sessionCache) getToken(r *http.Request) (string, error) {
 
 	c, err := r.Cookie(config.Manager.SSO.Key)
 	if err != nil {
+		fmt.Printf("key:%v\n", config.Manager.SSO.Key)
 		return "", errors.Annotatef(err, "key:%s", config.Manager.SSO.Key)
 	}
 	return c.Value, nil
@@ -82,6 +83,23 @@ func (u *userinfo) loadInfo() error {
 }
 
 func (s *sessionCache) User(w http.ResponseWriter, r *http.Request) (*userinfo, error) {
+	//如果url中带token字段，说明是rbac回调的
+	if token := r.URL.Query().Get("token"); token != "" {
+		cookie := http.Cookie{Name: config.Manager.SSO.Key, Value: token, Path: "/"}
+		http.SetCookie(w, &cookie)
+        vals := r.URL.Query()
+        vals.Del("token")
+        argv := vals.Encode()
+        url := r.URL.Path
+        if argv != "" {
+            url += "?" + argv
+        }
+		w.Header().Add("Location", url)
+		w.WriteHeader(http.StatusTemporaryRedirect)
+        log.Infof("%v remove token:%v, location:%v", s, token, url)
+		return nil, errors.Errorf("retry")
+	}
+
 	token, err := s.getToken(r)
 	if err != nil {
 		return nil, errors.Trace(err)
@@ -108,11 +126,12 @@ func (s *sessionCache) User(w http.ResponseWriter, r *http.Request) (*userinfo, 
 		return nil, errors.Trace(err)
 	}
 
-	id, err := userdb.loadUserID(user.Email)
+	mu, err := userdb.loadUser(user.Email)
 	if err != nil {
 		return nil, errors.Trace(err)
 	}
-	user.UserID = id
+	user.UserID = mu.ID
+	user.User = mu.Name
 
 	s.cache.Add(token, user)
 

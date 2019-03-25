@@ -14,8 +14,8 @@ import (
 
 	"github.com/dearcode/crab/http/server"
 	"github.com/dearcode/crab/log"
+	"github.com/fatih/color"
 	"github.com/juju/errors"
-    "github.com/fatih/color"
 
 	"github.com/dearcode/doodle/service/debug"
 )
@@ -115,8 +115,8 @@ func (s *Service) Register(obj interface{}) error {
 
 //Start 开启服务.
 func (s *Service) Start() {
-    //强制开启颜色
-    color.NoColor = false
+	//强制开启颜色
+	color.NoColor = false
 
 	s.docView = s.doc.view()
 	server.RegisterPath(&s.docView, "/doc/")

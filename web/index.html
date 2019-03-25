@@ -99,7 +99,7 @@
             var ssoURL = "";
 
             function logout() {
-                location.href=ssoURL + "/logout?ReturnUrl="+location.href;
+                location.href=ssoURL + "/authorize/?Callback="+location.href;
             }
 
             function loadAccount() {
@@ -110,7 +110,7 @@
                     async: false,
                     success: function(data,status) { 
                         if (data.Status != 0) {
-                            location.href= ssoURL+"/login?ReturnUrl="+location.href;
+                            location.href= ssoURL+"/authorize/?Callback="+location.href;
                             return
                         }
                         account = data;
@@ -131,8 +131,8 @@
                     url: "config",
                     async: false,
                     success: function(data,status) { 
-                        domain = status.Domain;
-                        ssoURL = status.SSOURL;
+                        domain = data.Data.Domain;
+                        ssoURL = data.Data.SSOURL;
                     },
                     error: function(req, data, error) { 
                         showMessage("<h3>"+req.responseText+"</h3>");

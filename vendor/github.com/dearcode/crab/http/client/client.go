@@ -3,6 +3,7 @@ package client
 import (
 	"bytes"
 	"compress/gzip"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -74,7 +75,10 @@ func New() *HTTPClient {
 		retryTimes: defaultRetryTimes,
 	}
 
-	hc.client.Transport = &http.Transport{Dial: hc.dial}
+	hc.client.Transport = &http.Transport{
+		Dial:            hc.dial,
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 	return hc
 }
 
@@ -114,7 +118,7 @@ func (c HTTPClient) do(method, url string, headers map[string]string, body []byt
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return nil, errors.Trace(err)
+		return nil, errors.Annotatef(err, "url:%v", url)
 	}
 	defer resp.Body.Close()
 

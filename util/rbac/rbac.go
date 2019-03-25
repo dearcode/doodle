@@ -91,7 +91,7 @@ func (c Client) GetUserResources(email string) ([]meta.Resource, error) {
 	buf, err := c.get(url)
 	if err != nil {
 		log.Infof("Get:%v error:%v", url, err)
-		return nil, errors.Trace(err)
+        return nil, errors.Annotatef(err, "url:%v", url)
 	}
 
 	resp := struct {
@@ -102,7 +102,7 @@ func (c Client) GetUserResources(email string) ([]meta.Resource, error) {
 
 	if err = json.Unmarshal(buf, &resp); err != nil {
 		log.Infof("Unmarshal error:%v, buf:%v", err, string(buf))
-		return nil, errors.Trace(err)
+        return nil, errors.Annotatef(err, "url:%v", url)
 	}
 
 	if resp.Status != 0 {
@@ -135,7 +135,7 @@ func (c Client) GetUser(email string) (meta.User, error) {
 	buf, err := c.get(url)
 	if err != nil {
 		log.Infof("Get:%v error:%v", url, err)
-		return meta.User{}, errors.Trace(err)
+        return meta.User{}, errors.Annotatef(err, "url:%v", url)
 	}
 
 	log.Infof("get user info resp:%v", string(buf))
