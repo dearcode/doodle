@@ -87,16 +87,16 @@ func (s *sessionCache) User(w http.ResponseWriter, r *http.Request) (*userinfo, 
 	if token := r.URL.Query().Get("token"); token != "" {
 		cookie := http.Cookie{Name: config.Manager.SSO.Key, Value: token, Path: "/"}
 		http.SetCookie(w, &cookie)
-        vals := r.URL.Query()
-        vals.Del("token")
-        argv := vals.Encode()
-        url := r.URL.Path
-        if argv != "" {
-            url += "?" + argv
-        }
+		vals := r.URL.Query()
+		vals.Del("token")
+		argv := vals.Encode()
+		url := r.URL.Path
+		if argv != "" {
+			url += "?" + argv
+		}
 		w.Header().Add("Location", url)
 		w.WriteHeader(http.StatusTemporaryRedirect)
-        log.Infof("%v remove token:%v, location:%v", s, token, url)
+		log.Infof("%v remove token:%v, location:%v", s, token, url)
 		return nil, errors.Errorf("retry")
 	}
 

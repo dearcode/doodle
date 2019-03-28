@@ -121,7 +121,11 @@ func (p *service) DELETE(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *service) POST(w http.ResponseWriter, r *http.Request) {
-	vars := meta.Service{}
+	vars := struct {
+		*meta.Service
+		clusterIDs int64 `json:"cluster_ids"`
+	}{}
+
 	u, err := session.User(w, r)
 	if err != nil {
 		log.Errorf("session.User error:%v, req:%v", errors.ErrorStack(err), r)
@@ -129,11 +133,12 @@ func (p *service) POST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = util.DecodeRequestValue(r, &vars); err != nil {
+	if err = server.ParseFormVars(r, &vars); err != nil {
 		log.Errorf("invalid request:%v, error:%v", r, errors.ErrorStack(err))
 		util.SendResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+	fmt.Printf("vars:%#v\n", vars)
 
 	if !u.IsAdmin {
 		vars.Email = u.Email
@@ -171,7 +176,7 @@ func (p *service) POST(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	id, err := orm.NewStmt(db, "service").Insert(vars)
+	id, err := orm.NewStmt(db, "service").Insert(vars.Service)
 	if err != nil {
 		if strings.Contains(err.Error(), "1062") {
 			log.Errorf("add req:%+v, error:%s", r, errors.ErrorStack(err))
@@ -181,9 +186,30 @@ func (p *service) POST(w http.ResponseWriter, r *http.Request) {
 		util.SendResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	var scr []serviceClusterRelation
+
+	for _, cid := range vars.ClusterIDs {
+		scr = append(scr, serviceClusterRelation{
+			ClusterID: cid,
+			ServiceID: id,
+		})
+	}
+
+	if _, err = orm.NewStmt(db, "service_cluster").Insert(scr); err != nil {
+		log.Errorf("add service_cluster req:%+v, error:%s", r, errors.ErrorStack(err))
+		util.SendResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	util.SendResponse(w, 0, fmt.Sprintf(`{"id":%d}`, id))
 
 	log.Debugf("add service:%v, id:%v, role:%d, resource:%d", vars, id, roleID, resID)
+}
+
+type serviceClusterRelation struct {
+	ServiceID int64 `db:"service_id"`
+	ClusterID int64 `db:"cluster_id"`
 }
 
 func (p *service) PUT(w http.ResponseWriter, r *http.Request) {

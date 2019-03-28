@@ -47,6 +47,10 @@ func (a account) parseToken(token string) (int64, time.Time, error) {
 	return id, time.Unix(sec, 0), nil
 }
 
+const (
+	maxSessionTimeout = 3600
+)
+
 func (a *account) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Token string `json:"token"`
@@ -72,8 +76,8 @@ func (a *account) GET(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//5秒之前的不认.
-	if t.Before(time.Now().Add(-time.Second * 5)) {
+	//3600秒之前的不认.
+	if t.Before(time.Now().Add(-time.Second * maxSessionTimeout)) {
 		log.Errorf("token timeout, token:%v, time:%v, now:%v", vars.Token, t, time.Now())
 		server.SendResponse(w, http.StatusBadRequest, "token timeout")
 		return

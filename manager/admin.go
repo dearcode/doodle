@@ -26,7 +26,7 @@ func newUserDB() *userDB {
 	return &userDB{
 		admins: cache.NewCache(int64(config.Manager.Cache.Timeout)),
 		res:    cache.NewCache(int64(config.Manager.Cache.Timeout)),
-		users:    cache.NewCache(int64(config.Manager.Cache.Timeout)),
+		users:  cache.NewCache(int64(config.Manager.Cache.Timeout)),
 		roles:  cache.NewCache(int64(config.Manager.Cache.Timeout)),
 	}
 }

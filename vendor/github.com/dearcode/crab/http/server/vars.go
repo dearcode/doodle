@@ -15,6 +15,36 @@ import (
 	"github.com/dearcode/crab/validation"
 )
 
+func warp(getVal func(string) (string, bool), rt reflect.Type, rv reflect.Value) error {
+	var key string
+
+	for i := 0; i < rt.NumField(); i++ {
+		f := rt.Field(i)
+		if f.PkgPath != "" && !f.Anonymous { // unexported
+			continue
+		}
+
+
+		switch f.Type.Kind() {
+		case reflect.Ptr:
+			np := reflect.New(f.Type.Elem())
+            rv.Set(np)
+
+		}
+
+		if key = f.Tag.Get("json"); key == "" {
+			key = f.Name
+		}
+
+		val, ok := getVal(key)
+		if !ok {
+			continue
+		}
+
+	}
+
+}
+
 // UnmarshalForm 解析form中或者url中参数, 只支持int和string.
 func UnmarshalForm(req *http.Request, postion VariablePostion, result interface{}) error {
 	if postion == FORM {
@@ -33,15 +63,6 @@ func UnmarshalForm(req *http.Request, postion VariablePostion, result interface{
 	}
 
 	for i := 0; i < rt.NumField(); i++ {
-		f := rt.Field(i)
-		if f.PkgPath != "" && !f.Anonymous { // unexported
-			continue
-		}
-		key := f.Tag.Get("json")
-		if key == "" {
-			key = f.Name
-		}
-		var val string
 
 		switch postion {
 		case FORM, URI:
@@ -49,6 +70,8 @@ func UnmarshalForm(req *http.Request, postion VariablePostion, result interface{
 		case HEADER:
 			val = req.Header.Get(key)
 		}
+
+		fmt.Printf("key:%v kind:%v\n", key, f.Type.Kind())
 
 		switch f.Type.Kind() {
 		case reflect.Bool:
@@ -78,6 +101,10 @@ func UnmarshalForm(req *http.Request, postion VariablePostion, result interface{
 
 		case reflect.String:
 			rv.Field(i).SetString(val)
+		case reflect.Struct:
+			s := reflect.New(f.Type)
+			UnmarshalForm(req, postion, s.Interface())
+			rv.Field(i).Set(s.Elem())
 		}
 	}
 	return nil

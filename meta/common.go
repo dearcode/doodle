@@ -35,12 +35,12 @@ type Relation struct {
 
 //Service 微服务信息.
 type Service struct {
-	ID         int64  `json:"id" db_default:"auto"`
-	RoleID     int64  `json:"role_id" `
-	ResourceID int64  `json:"resource_id" `
-	ClusterID  int64  `json:"cluster_id"`
-	Name       string `json:"name" valid:"Required"`
-	User       string `json:"user" `
+	ID         int64   `json:"id" db_default:"auto"`
+	RoleID     int64   `json:"role_id" `
+	ResourceID int64   `json:"resource_id" `
+	ClusterIDs []int64 `json:"cluster_ids"`
+	Name       string  `json:"name" valid:"Required"`
+	User       string  `json:"user" `
 	Validate   bool
 	Email      string `json:"email" `
 	Path       string `json:"path"  valid:"AlphaNumeric"`
