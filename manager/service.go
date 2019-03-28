@@ -123,7 +123,6 @@ func (p *service) DELETE(w http.ResponseWriter, r *http.Request) {
 func (p *service) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		*meta.Service
-		clusterIDs int64 `json:"cluster_ids"`
 	}{}
 
 	u, err := session.User(w, r)

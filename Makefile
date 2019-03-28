@@ -14,17 +14,16 @@ LDFLAGS += -X "$(GitMessage)=$(shell git log --pretty=format:'%cn %s %b' -1)"
 source := $(shell ls -ld */|awk '$$NF !~ /bin\/|logs\/|config\/|_vendor\/|vendor\/|web\/|Godeps\/|docs\// {printf $$NF" "}')
 
 golint:
-	go get github.com/golang/lint/golint
+	go get golang.org/x/lint/golint
 
-megacheck:
-	go get honnef.co/go/tools/cmd/megacheck
+staticcheck:
+	go get honnef.co/go/tools/cmd/staticcheck
 
-lint: golint megacheck
+lint: golint staticcheck
 	for path in $(source); do golint "$$path..."; done;
 	for path in $(source); do gofmt -s -l -w $$path;  done;
 	go vet ./...
-	megacheck ./...
-
+	staticcheck ./...
 
 
 clean:
