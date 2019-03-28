@@ -3,7 +3,6 @@ package client
 import (
 	"bytes"
 	"compress/gzip"
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -26,6 +25,7 @@ type HTTPClient struct {
 	logger            *log.Logger
 }
 
+//StatusError http错误.
 type StatusError struct {
 	Code    int
 	Message string
@@ -75,10 +75,7 @@ func New() *HTTPClient {
 		retryTimes: defaultRetryTimes,
 	}
 
-	hc.client.Transport = &http.Transport{
-		Dial:            hc.dial,
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
+	hc.client.Transport = &http.Transport{Dial: hc.dial}
 	return hc
 }
 
@@ -118,7 +115,7 @@ func (c HTTPClient) do(method, url string, headers map[string]string, body []byt
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return nil, errors.Annotatef(err, "url:%v", url)
+		return nil, errors.Trace(err)
 	}
 	defer resp.Body.Close()
 

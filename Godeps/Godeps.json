@@ -38,53 +38,53 @@
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/cache",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/config",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/http/client",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/http/server",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/log",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/meta",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/orm",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/util/aes",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/util/str",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/validation",
-			"Comment": "v1.9.0-6-gfc033db",
-			"Rev": "fc033db329ec562254d9b364cfdc43646df4b95a"
+			"Comment": "v1.9.0-7-gaf904c3",
+			"Rev": "af904c3009f409d8c699e548474de866f4e06983"
 		},
 		{
 			"ImportPath": "github.com/fatih/color",
