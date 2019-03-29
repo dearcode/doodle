@@ -38,53 +38,53 @@
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/cache",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/config",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/http/client",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/http/server",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/log",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/meta",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/orm",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/util/aes",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/util/str",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/dearcode/crab/validation",
-			"Comment": "v1.9.0-8-gb67e04b",
-			"Rev": "b67e04bd784f49ad0495e5a147447ca1de2e85f3"
+			"Comment": "v1.11.1",
+			"Rev": "4a63a62f1f32e1fb4c675cc7da486b06fc66ed4d"
 		},
 		{
 			"ImportPath": "github.com/fatih/color",

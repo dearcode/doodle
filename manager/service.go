@@ -122,7 +122,7 @@ func (p *service) DELETE(w http.ResponseWriter, r *http.Request) {
 
 func (p *service) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
-		*meta.Service
+		meta.Service
 	}{}
 
 	u, err := session.User(w, r)
@@ -177,8 +177,8 @@ func (p *service) POST(w http.ResponseWriter, r *http.Request) {
 
 	id, err := orm.NewStmt(db, "service").Insert(vars.Service)
 	if err != nil {
+		log.Errorf("add req:%+v, error:%s", r, errors.ErrorStack(err))
 		if strings.Contains(err.Error(), "1062") {
-			log.Errorf("add req:%+v, error:%s", r, errors.ErrorStack(err))
 			util.SendResponse(w, http.StatusInternalServerError, "项目路径已存在, 项目路径在接口平台中是唯一的，不能重用")
 			return
 		}
@@ -186,16 +186,16 @@ func (p *service) POST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var scr []serviceClusterRelation
+	var scr []interface{}
 
 	for _, cid := range vars.ClusterIDs {
-		scr = append(scr, serviceClusterRelation{
+		scr = append(scr, &serviceClusterRelation{
 			ClusterID: cid,
 			ServiceID: id,
 		})
 	}
 
-	if _, err = orm.NewStmt(db, "service_cluster").Insert(scr); err != nil {
+	if _, err = orm.NewStmt(db, "service_cluster").SetLogger(log.GetLogger()).BatchInsert(scr); err != nil {
 		log.Errorf("add service_cluster req:%+v, error:%s", r, errors.ErrorStack(err))
 		util.SendResponse(w, http.StatusInternalServerError, err.Error())
 		return
