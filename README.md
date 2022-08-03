@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dearcode/doodle.svg?branch=master)](https://travis-ci.org/dearcode/doodle)  
+[![Build Status](https://app.travis-ci.com/dearcode/doodle.svg?branch=master)](https://app.travis-ci.com/dearcode/doodle)
 
 # doodle
 A complete Faas framework for improving development efficiency and automating compilation, installation, deployment, monitoring, log collection, and more.   
