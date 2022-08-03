@@ -3,11 +3,11 @@ package manager
 import (
 	"net/http"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/util"
+	"dearcode.net/doodle/util"
 )
 
 type roleInfo struct {

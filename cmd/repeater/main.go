@@ -10,11 +10,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 
-	"github.com/dearcode/doodle/repeater"
-	"github.com/dearcode/doodle/repeater/config"
-	"github.com/dearcode/doodle/util"
+	"dearcode.net/doodle/repeater"
+	"dearcode.net/doodle/repeater/config"
+	"dearcode.net/doodle/util"
 )
 
 var (

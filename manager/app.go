@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/util/aes"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/util/aes"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/meta"
-	"github.com/dearcode/doodle/util"
+	"dearcode.net/doodle/meta"
+	"dearcode.net/doodle/util"
 )
 
 type application struct {

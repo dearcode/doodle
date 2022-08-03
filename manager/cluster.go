@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/orm"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/orm"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/util"
+	"dearcode.net/doodle/util"
 )
 
 type node struct {

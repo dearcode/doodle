@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"

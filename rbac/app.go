@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/util/aes"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/util/aes"
 
-	"github.com/dearcode/doodle/rbac/config"
-	"github.com/dearcode/doodle/rbac/meta"
-	"github.com/dearcode/doodle/util"
+	"dearcode.net/doodle/rbac/config"
+	"dearcode.net/doodle/rbac/meta"
+	"dearcode.net/doodle/util"
 )
 
 type rbacAPP struct {

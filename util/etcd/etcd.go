@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
+	"go.etcd.io/etcd/client/v3"
 )
 
 const (

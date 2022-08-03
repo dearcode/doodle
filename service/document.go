@@ -7,10 +7,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
 
-	"github.com/dearcode/doodle/service/debug"
+	"dearcode.net/doodle/service/debug"
 )
 
 const (

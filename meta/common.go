@@ -1,7 +1,7 @@
 package meta
 
 import (
-	"github.com/dearcode/crab/http/server"
+	"dearcode.net/crab/http/server"
 )
 
 //Application 对应应用表.

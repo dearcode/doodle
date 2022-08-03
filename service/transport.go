@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/doodle/util/uuid"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/doodle/util/uuid"
 	"github.com/hokaccha/go-prettyjson"
 )
 

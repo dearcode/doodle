@@ -11,11 +11,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/validation"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/validation"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/meta"
+	"dearcode.net/doodle/meta"
 )
 
 var (

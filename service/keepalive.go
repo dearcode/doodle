@@ -6,14 +6,14 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
+	"go.etcd.io/etcd/client/v3"
 
-	"github.com/dearcode/doodle/meta"
-	"github.com/dearcode/doodle/service/debug"
-	"github.com/dearcode/doodle/util"
-	"github.com/dearcode/doodle/util/etcd"
+	"dearcode.net/doodle/meta"
+	"dearcode.net/doodle/service/debug"
+	"dearcode.net/doodle/util"
+	"dearcode.net/doodle/util/etcd"
 )
 
 const (

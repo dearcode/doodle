@@ -13,14 +13,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/orm"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/orm"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/distributor/config"
-	"github.com/dearcode/doodle/util"
-	"github.com/dearcode/doodle/util/ssh"
-	"github.com/dearcode/doodle/util/uuid"
+	"dearcode.net/doodle/distributor/config"
+	"dearcode.net/doodle/util"
+	"dearcode.net/doodle/util/ssh"
+	"dearcode.net/doodle/util/uuid"
 )
 
 const (

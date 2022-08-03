@@ -11,13 +11,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/meta"
-	"github.com/dearcode/doodle/util"
-	"github.com/dearcode/doodle/util/uuid"
+	"dearcode.net/doodle/meta"
+	"dearcode.net/doodle/util"
+	"dearcode.net/doodle/util/uuid"
 )
 
 func (r *repeater) delValue(req *http.Request, v *meta.Variable) {

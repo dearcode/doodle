@@ -6,13 +6,13 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
+	"go.etcd.io/etcd/client/v3"
 
-	"github.com/dearcode/doodle/meta"
-	"github.com/dearcode/doodle/repeater/config"
-	"github.com/dearcode/doodle/util/etcd"
+	"dearcode.net/doodle/meta"
+	"dearcode.net/doodle/repeater/config"
+	"dearcode.net/doodle/util/etcd"
 )
 
 const (

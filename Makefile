@@ -2,9 +2,9 @@ cmd := $(shell ls cmd/)
 
 all: $(cmd)
 
-GitHash := github.com/dearcode/doodle/util.GitHash
-GitTime := github.com/dearcode/doodle/util.GitTime
-GitMessage := github.com/dearcode/doodle/util.GitMessage
+GitHash := dearcode.net/doodle/util.GitHash
+GitTime := dearcode.net/doodle/util.GitTime
+GitMessage := dearcode.net/doodle/util.GitMessage
 
 
 LDFLAGS += -X "$(GitHash)=$(shell git log --pretty=format:'%H' -1)"

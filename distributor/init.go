@@ -1,11 +1,11 @@
 package distributor
 
 import (
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/orm"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/orm"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/distributor/config"
+	"dearcode.net/doodle/distributor/config"
 )
 
 var (
@@ -21,7 +21,7 @@ func Init(confPath string) error {
 		return errors.Trace(err)
 	}
 
-	mdb = orm.NewDB(config.Distributor.DB.IP, config.Distributor.DB.Port, config.Distributor.DB.Name, config.Distributor.DB.User, config.Distributor.DB.Passwd, config.Distributor.DB.Charset, 10)
+	mdb = &config.Distributor.DB
 
 	server.RegisterPath(&distributor{}, "/distributor/")
 

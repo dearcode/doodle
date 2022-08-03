@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/dearcode/crab/cache"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/orm"
+	"dearcode.net/crab/cache"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/orm"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/manager/config"
-	"github.com/dearcode/doodle/rbac/meta"
+	"dearcode.net/doodle/manager/config"
+	"dearcode.net/doodle/rbac/meta"
 )
 
 type userDB struct {

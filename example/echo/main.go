@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/dearcode/doodle/service"
+	"dearcode.net/doodle/service"
 )
 
 type echo struct {

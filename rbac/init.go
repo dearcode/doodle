@@ -7,13 +7,13 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/orm"
-	"github.com/dearcode/crab/util/aes"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/orm"
+	"dearcode.net/crab/util/aes"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/rbac/config"
+	"dearcode.net/doodle/rbac/config"
 )
 
 var (
@@ -23,11 +23,11 @@ var (
 
 // ServerInit 初始化HTTP接口.
 func ServerInit() error {
-	if err := config.Load(); err != nil {
+	if err := config.Load("rbac.ini"); err != nil {
 		return err
 	}
 
-	mdb = orm.NewDB(config.RBAC.DB.IP, config.RBAC.DB.Port, config.RBAC.DB.Name, config.RBAC.DB.User, config.RBAC.DB.Passwd, config.RBAC.DB.Charset, 10)
+	mdb = &config.RBAC.DB
 
 	server.RegisterPath(&rbacUser{}, "/rbac/user/")
 	server.RegisterPath(&rbacUserInfo{}, "/rbac/user/info/")

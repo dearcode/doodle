@@ -12,12 +12,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
 	"github.com/fatih/color"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/service/debug"
+	"dearcode.net/doodle/service/debug"
 )
 
 //RequestHeader 默认请求头.

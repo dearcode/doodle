@@ -4,9 +4,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 
-	"github.com/dearcode/doodle/repeater/config"
+	"dearcode.net/doodle/repeater/config"
 )
 
 type errorEntry struct {

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/meta"
-	"github.com/dearcode/doodle/util"
+	"dearcode.net/doodle/meta"
+	"dearcode.net/doodle/util"
 )
 
 type variableInfo struct {

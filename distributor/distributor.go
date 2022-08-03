@@ -3,8 +3,8 @@ package distributor
 import (
 	"net/http"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 )
 

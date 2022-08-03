@@ -6,13 +6,13 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/orm"
-	"github.com/dearcode/crab/util/aes"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/orm"
+	"dearcode.net/crab/util/aes"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/rbac/config"
+	"dearcode.net/doodle/rbac/config"
 )
 
 type account struct {

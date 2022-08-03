@@ -12,14 +12,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/orm"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/orm"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/meta"
-	"github.com/dearcode/doodle/meta/document"
-	"github.com/dearcode/doodle/util"
+	"dearcode.net/doodle/meta"
+	"dearcode.net/doodle/meta/document"
+	"dearcode.net/doodle/util"
 )
 
 type interfaceRun struct {

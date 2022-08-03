@@ -5,10 +5,10 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/dearcode/crab/util/aes"
+	"dearcode.net/crab/util/aes"
 
-	rbacCfg "github.com/dearcode/doodle/rbac/config"
-	rpCfg "github.com/dearcode/doodle/repeater/config"
+	rbacCfg "dearcode.net/doodle/rbac/config"
+	rpCfg "dearcode.net/doodle/repeater/config"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 )
 
 func parseServiceKey(key string) (int64, error) {
-	if err := rpCfg.Load(); err != nil {
+	if err := rpCfg.Load("repeater.ini"); err != nil {
 		return 0, nil
 	}
 
@@ -46,7 +46,7 @@ func main() {
 
 		fmt.Printf("project:%v\n", id)
 	case *appID != 0:
-		if err := rbacCfg.Load(); err != nil {
+		if err := rbacCfg.Load("rbac.ini"); err != nil {
 			panic(err)
 		}
 		as := make([]byte, 8)

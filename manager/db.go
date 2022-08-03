@@ -6,10 +6,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/meta"
+	"dearcode.net/doodle/meta"
 )
 
 // result 必需是一个指向切片的指针

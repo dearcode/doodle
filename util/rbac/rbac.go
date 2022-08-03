@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/dearcode/crab/http/client"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/http/client"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/rbac/meta"
+	"dearcode.net/doodle/rbac/meta"
 )
 
 func (c Client) get(url string) ([]byte, error) {

@@ -7,11 +7,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
 
-	"github.com/dearcode/doodle/distributor"
-	"github.com/dearcode/doodle/util"
+	"dearcode.net/doodle/distributor"
+	"dearcode.net/doodle/util"
 )
 
 var (

@@ -6,10 +6,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/rbac/meta"
+	"dearcode.net/doodle/rbac/meta"
 )
 
 // queryAll 返回所有结果(不分页), result 必需是一个指向切片的指针

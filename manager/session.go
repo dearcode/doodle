@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dearcode/crab/cache"
-	"github.com/dearcode/crab/log"
+	"dearcode.net/crab/cache"
+	"dearcode.net/crab/log"
 	"github.com/juju/errors"
 
-	"github.com/dearcode/doodle/manager/config"
+	"dearcode.net/doodle/manager/config"
 )
 
 const (

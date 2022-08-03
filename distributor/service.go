@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/orm"
-	"github.com/dearcode/crab/util/aes"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/orm"
+	"dearcode.net/crab/util/aes"
 
-	"github.com/dearcode/doodle/distributor/config"
-	"github.com/dearcode/doodle/util/etcd"
+	"dearcode.net/doodle/distributor/config"
+	"dearcode.net/doodle/util/etcd"
 )
 
 type service struct {

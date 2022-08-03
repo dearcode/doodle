@@ -3,7 +3,7 @@ package distributor
 import (
 	"testing"
 
-	"github.com/dearcode/doodle/distributor/config"
+	"dearcode.net/doodle/distributor/config"
 )
 
 func TestServiceKey(t *testing.T) {

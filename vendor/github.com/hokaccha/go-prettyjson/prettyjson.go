@@ -71,7 +71,9 @@ func (f *Formatter) Marshal(v interface{}) ([]byte, error) {
 // Format formats JSON string.
 func (f *Formatter) Format(data []byte) ([]byte, error) {
 	var v interface{}
-	if err := json.Unmarshal(data, &v); err != nil {
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.UseNumber()
+	if err := decoder.Decode(&v); err != nil {
 		return nil, err
 	}
 
@@ -98,6 +100,8 @@ func (f *Formatter) pretty(v interface{}, depth int) string {
 		return f.processString(val)
 	case float64:
 		return f.sprintColor(f.NumberColor, strconv.FormatFloat(val, 'f', -1, 64))
+	case json.Number:
+		return f.sprintColor(f.NumberColor, string(val))
 	case bool:
 		return f.sprintColor(f.BoolColor, strconv.FormatBool(val))
 	case nil:
@@ -145,7 +149,12 @@ func (f *Formatter) processMap(m map[string]interface{}, depth int) string {
 
 	for _, key := range keys {
 		val := m[key]
-		k := f.sprintfColor(f.KeyColor, `"%s"`, key)
+		buf := &bytes.Buffer{}
+		encoder := json.NewEncoder(buf)
+		encoder.SetEscapeHTML(false)
+		encoder.Encode(key)
+		s := strings.TrimSuffix(string(buf.Bytes()), "\n")
+		k := f.sprintColor(f.KeyColor, s)
 		v := f.pretty(val, depth+1)
 
 		valueIndent := " "

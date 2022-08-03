@@ -1,13 +1,13 @@
 package manager
 
 import (
-	"github.com/dearcode/crab/http/client"
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/orm"
+	"dearcode.net/crab/http/client"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/orm"
 
-	"github.com/dearcode/doodle/manager/config"
-	"github.com/dearcode/doodle/util/rbac"
+	"dearcode.net/doodle/manager/config"
+	"dearcode.net/doodle/util/rbac"
 )
 
 var (
@@ -18,10 +18,10 @@ var (
 
 // ServerInit 初始化HTTP接口.
 func ServerInit() error {
-	if err := config.Load(); err != nil {
+	if err := config.Load("manager.ini"); err != nil {
 		return err
 	}
-	mdb = orm.NewDB(config.Manager.DB.IP, config.Manager.DB.Port, config.Manager.DB.Name, config.Manager.DB.User, config.Manager.DB.Passwd, config.Manager.DB.Charset, 10)
+	mdb = &config.Manager.DB
 
 	rbacClient = rbac.New(config.Manager.RBAC.Host, config.Manager.RBAC.Token)
 

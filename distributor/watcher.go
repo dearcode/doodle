@@ -7,17 +7,17 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/coreos/etcd/clientv3"
-	"github.com/dearcode/crab/http/client"
-	"github.com/dearcode/crab/http/server"
-	"github.com/dearcode/crab/log"
-	"github.com/dearcode/crab/util/aes"
+	"dearcode.net/crab/http/client"
+	"dearcode.net/crab/http/server"
+	"dearcode.net/crab/log"
+	"dearcode.net/crab/util/aes"
 	"github.com/juju/errors"
+	"go.etcd.io/etcd/client/v3"
 
-	"github.com/dearcode/doodle/distributor/config"
-	"github.com/dearcode/doodle/meta"
-	"github.com/dearcode/doodle/meta/document"
-	"github.com/dearcode/doodle/util/etcd"
+	"dearcode.net/doodle/distributor/config"
+	"dearcode.net/doodle/meta"
+	"dearcode.net/doodle/meta/document"
+	"dearcode.net/doodle/util/etcd"
 )
 
 const (
