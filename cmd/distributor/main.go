@@ -10,8 +10,8 @@ import (
 	"dearcode.net/crab/http/server"
 	"dearcode.net/crab/log"
 
-	"dearcode.net/doodle/distributor"
-	"dearcode.net/doodle/util"
+	"dearcode.net/doodle/pkg/distributor"
+	"dearcode.net/doodle/pkg/util"
 )
 
 var (

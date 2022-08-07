@@ -7,8 +7,8 @@ import (
 
 	"dearcode.net/crab/util/aes"
 
-	rbacCfg "dearcode.net/doodle/rbac/config"
-	rpCfg "dearcode.net/doodle/repeater/config"
+	rbacCfg "dearcode.net/doodle/pkg/rbac/config"
+	rpCfg "dearcode.net/doodle/pkg/repeater/config"
 )
 
 var (
