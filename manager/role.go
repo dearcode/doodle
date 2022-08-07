@@ -268,7 +268,7 @@ func (ur *userRole) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendData(w, rs)
 }
 
-//DELETE 删除角色
+// DELETE 删除角色
 func (r *role) DELETE(w http.ResponseWriter, req *http.Request) {
 	if err := util.DecodeRequestValue(req, r); err != nil {
 		util.SendResponse(w, 500, err.Error())
@@ -286,7 +286,7 @@ func (r *role) DELETE(w http.ResponseWriter, req *http.Request) {
 	util.SendResponseJSON(w, nil)
 }
 
-//onRoleUserDelete 删除角色中的用户
+// onRoleUserDelete 删除角色中的用户
 func (ru *roleUser) DELETE(w http.ResponseWriter, r *http.Request) {
 	_, err := session.User(w, r)
 	if err != nil {

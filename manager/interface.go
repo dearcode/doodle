@@ -118,7 +118,7 @@ func (i *interfaceRun) PUT(w http.ResponseWriter, r *http.Request) {
 type interfaceInfo struct {
 }
 
-//GET interfaceInfo.
+// GET interfaceInfo.
 func (ii *interfaceInfo) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		ID int64 `json:"id" valid:"Required"`

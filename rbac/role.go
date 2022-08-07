@@ -18,7 +18,7 @@ import (
 type rbacRole struct {
 }
 
-//GET 查询指定app的所有role.
+// GET 查询指定app的所有role.
 func (role *rbacRole) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Query  int    `json:"query"`
@@ -69,7 +69,7 @@ func (role *rbacRole) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendRows(w, total, rs)
 }
 
-//POST 为app添加role.
+// POST 为app添加role.
 func (role *rbacRole) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Name     string `json:"name"`
@@ -100,7 +100,7 @@ func (role *rbacRole) POST(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseData(w, id)
 }
 
-//PUT 修改role信息.
+// PUT 修改role信息.
 func (role *rbacRole) PUT(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		ID       int64  `json:"role_id"`
@@ -170,7 +170,7 @@ func RoleUpdate(appID, roleID int64, name, comments string) error {
 	return updateRole(role)
 }
 
-//RoleGetWithToken 根据token查询role.
+// RoleGetWithToken 根据token查询role.
 func RoleGetWithToken(token, email string) ([]meta.Role, error) {
 	buf, err := aes.Decrypt(token, config.RBAC.Server.Key)
 	if err != nil {
@@ -196,7 +196,7 @@ func RoleGetWithToken(token, email string) ([]meta.Role, error) {
 	return rs, nil
 }
 
-//RoleQuery 根据条件查找用户有关的role
+// RoleQuery 根据条件查找用户有关的role
 func RoleQuery(appID, roleID int64, email, sort, order string, offset, limit int) (int, []meta.RoleUser, error) {
 	where := "role_user.role_id = role.id and role_user.user_id = user.id"
 
@@ -226,7 +226,7 @@ func RoleQuery(appID, roleID int64, email, sort, order string, offset, limit int
 	return total, rs, nil
 }
 
-//RoleDelete 删除指定role，判断是否存在关联，有关联不能删除
+// RoleDelete 删除指定role，判断是否存在关联，有关联不能删除
 func RoleDelete(appID, roleID int64) error {
 	sql := fmt.Sprintf("select id from role_user where app_id=%d and role_id=%d limit 1", appID, roleID)
 	ok, err := validate(sql)
@@ -257,7 +257,7 @@ func RoleDelete(appID, roleID int64) error {
 	return nil
 }
 
-//DELETE 删除role.
+// DELETE 删除role.
 func (role *rbacRole) DELETE(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		ID   int64  `json:"role_id"`

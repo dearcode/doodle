@@ -1,6 +1,8 @@
 package config
 
 import (
+	"flag"
+
 	dcfg "dearcode.net/crab/config"
 	"dearcode.net/crab/orm"
 )
@@ -44,8 +46,9 @@ type Config struct {
 
 var (
 	Manager Config
+	cfgPath = flag.String("c", "./config/manager.ini", "config file")
 )
 
-func Load(path string) error {
-	return dcfg.LoadConfig(path, &Manager)
+func Load() error {
+	return dcfg.LoadConfig(*cfgPath, &Manager)
 }

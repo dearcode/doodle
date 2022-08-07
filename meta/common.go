@@ -4,7 +4,7 @@ import (
 	"dearcode.net/crab/http/server"
 )
 
-//Application 对应应用表.
+// Application 对应应用表.
 type Application struct {
 	ID      int64
 	Name    string
@@ -16,7 +16,7 @@ type Application struct {
 	Mtime   string
 }
 
-//Relation 关联关系结构.
+// Relation 关联关系结构.
 type Relation struct {
 	ID               int64
 	ApplicationID    int64  `db:"application_id"`
@@ -33,7 +33,7 @@ type Relation struct {
 	Mtime            string
 }
 
-//Service 微服务信息.
+// Service 微服务信息.
 type Service struct {
 	ID         int64   `json:"id" db_auto`
 	RoleID     int64   `json:"role_id" `
@@ -51,7 +51,7 @@ type Service struct {
 	MTime      string `json:"mtime" db:"mtime" db_default:"now()"`
 }
 
-//Variable 接口参数
+// Variable 接口参数
 type Variable struct {
 	ID       int64
 	Postion  server.VariablePostion
@@ -82,14 +82,14 @@ type Interface struct {
 	Mtime   string
 }
 
-//TokenBody token结构.
+// TokenBody token结构.
 type TokenBody struct {
 	AppID      int64
 	Name       string
 	CreateTime int64
 }
 
-//Response 通用返回结果
+// Response 通用返回结果
 type Response struct {
 	Status  int
 	Message string      `json:",omitempty"`

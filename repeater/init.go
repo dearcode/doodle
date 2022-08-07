@@ -17,13 +17,13 @@ var (
 	stats  *statsCache
 )
 
-//repeater 网关验证模块
+// repeater 网关验证模块
 type repeater struct {
 }
 
 // Init 初始化HTTP接口.
 func Init() error {
-	if err := config.Load("repeater.ini"); err != nil {
+	if err := config.Load(); err != nil {
 		return errors.Trace(err)
 	}
 
@@ -55,7 +55,7 @@ func Init() error {
 	return nil
 }
 
-//Stop 结束后端监控.
+// Stop 结束后端监控.
 func Stop() {
 	bs.stop()
 }

@@ -31,7 +31,7 @@ func newUserDB() *userDB {
 	}
 }
 
-//isAdmin 判断是不是管理员
+// isAdmin 判断是不是管理员
 func (u *userDB) isAdmin(email string) bool {
 	u.RLock()
 	if ok := u.admins.Get(email); ok != nil {
@@ -78,7 +78,7 @@ func (u *userDB) isAdmin(email string) bool {
 	return true
 }
 
-//loadResource 查找用户权限
+// loadResource 查找用户权限
 func (u *userDB) loadResource(email string) ([]int64, error) {
 	u.RLock()
 	if res := u.res.Get(email); res != nil {
@@ -133,7 +133,7 @@ func (u *userinfo) setRoles(roles []int64) {
 	u.RolesKey = buf.String()
 }
 
-//validate 权限验证
+// validate 权限验证
 func (u *userinfo) assert(resID int64) error {
 	if u.IsAdmin {
 		return nil
@@ -147,7 +147,7 @@ func (u *userinfo) assert(resID int64) error {
 	return fmt.Errorf("you don't have permission to access")
 }
 
-//loadUserID 查找用户ID.
+// loadUserID 查找用户ID.
 func (u *userDB) loadUser(email string) (meta.User, error) {
 	u.Lock()
 	defer u.Unlock()
@@ -170,7 +170,7 @@ func (u *userDB) loadUser(email string) (meta.User, error) {
 	return user, nil
 }
 
-//loadRoles 查找用户所有角色.
+// loadRoles 查找用户所有角色.
 func (u *userDB) loadRoles(email string) ([]int64, error) {
 	u.RLock()
 	if roles := u.roles.Get(email); roles != nil {

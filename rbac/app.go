@@ -57,7 +57,7 @@ func (a *rbacAPP) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseData(w, as)
 }
 
-//POST 添加应用
+// POST 添加应用
 func (a *rbacAPP) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Name     string `json:"name"`
@@ -82,7 +82,7 @@ func (a *rbacAPP) POST(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseData(w, token)
 }
 
-//AppAdd 添加app.
+// AppAdd 添加app.
 func AppAdd(name, email, comments string) (int64, string, error) {
 	app := meta.App{
 		Name:     name,

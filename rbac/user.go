@@ -146,7 +146,7 @@ func UserAdd(appID int64, name, email string) (int64, error) {
 	return id, nil
 }
 
-//UserGetAll 根据appID查询用户.
+// UserGetAll 根据appID查询用户.
 func UserGetAll(appID int64) ([]meta.User, error) {
 	where := fmt.Sprintf("id=%d", appID)
 	var us []meta.User

@@ -16,17 +16,17 @@ func (c Client) get(url string) ([]byte, error) {
 	return client.New().Timeout(c.timeout).Get(url, map[string]string{"Token": c.token}, nil)
 }
 
-//Post do post request.
+// Post do post request.
 func (c Client) post(url string, body []byte) ([]byte, error) {
 	return client.New().Timeout(c.timeout).Post(url, map[string]string{"Token": c.token, "Content-Type": "application/x-www-form-urlencoded"}, body)
 }
 
-//Put do pust request.
+// Put do pust request.
 func (c Client) put(url string, body []byte) ([]byte, error) {
 	return client.New().Timeout(c.timeout).Put(url, map[string]string{"Token": c.token}, body)
 }
 
-//Delete do delete request.
+// Delete do delete request.
 func (c Client) delete(url string) ([]byte, error) {
 	return client.New().Timeout(c.timeout).Delete(url, map[string]string{"Token": c.token}, nil)
 }
@@ -35,7 +35,7 @@ const (
 	timeout = 10
 )
 
-//Client rbac 客户端.
+// Client rbac 客户端.
 type Client struct {
 	host    string
 	token   string
@@ -48,7 +48,7 @@ type rbacResponse struct {
 	Data    int64
 }
 
-//New 创建rbac客户端.
+// New 创建rbac客户端.
 func New(host, token string) *Client {
 	return &Client{
 		timeout: timeout,
@@ -85,7 +85,7 @@ func (c Client) responseID(buf []byte) (int64, error) {
 	return resp.Data, nil
 }
 
-//GetUserResources 根据用户邮箱，获取关联的资源.
+// GetUserResources 根据用户邮箱，获取关联的资源.
 func (c Client) GetUserResources(email string) ([]meta.Resource, error) {
 	url := fmt.Sprintf("http://%s/rbac/user/resource/?email=%s", c.host, email)
 	buf, err := c.get(url)
@@ -112,7 +112,7 @@ func (c Client) GetUserResources(email string) ([]meta.Resource, error) {
 	return resp.Data, nil
 }
 
-//GetUserResourceIDs 根据用户邮箱，获取关联的资源ID.
+// GetUserResourceIDs 根据用户邮箱，获取关联的资源ID.
 func (c Client) GetUserResourceIDs(email string) ([]int64, error) {
 	res, err := c.GetUserResources(email)
 	if err != nil {
@@ -128,7 +128,7 @@ func (c Client) GetUserResourceIDs(email string) ([]int64, error) {
 	return ids, nil
 }
 
-//GetUser 获取用户信息.
+// GetUser 获取用户信息.
 func (c Client) GetUser(email string) (meta.User, error) {
 	url := fmt.Sprintf("http://%s/rbac/user/info/?email=%s", c.host, email)
 
@@ -157,7 +157,7 @@ func (c Client) GetUser(email string) (meta.User, error) {
 	return resp.Data, nil
 }
 
-//PostResource 添加资源.
+// PostResource 添加资源.
 func (c Client) PostResource(name, comments string) (int64, error) {
 	form := url.Values{}
 	form.Add("Name", name)
@@ -179,7 +179,7 @@ func (c Client) PostResource(name, comments string) (int64, error) {
 	return c.responseID(buf)
 }
 
-//PutRole 修改角色信息.
+// PutRole 修改角色信息.
 func (c Client) PutRole(roleID int64, name, comments string) error {
 	form := url.Values{}
 	form.Add("role_id", fmt.Sprintf("%d", roleID))
@@ -202,7 +202,7 @@ func (c Client) PutRole(roleID int64, name, comments string) error {
 	return c.responseError(buf)
 }
 
-//PostRole 添加角色.
+// PostRole 添加角色.
 func (c Client) PostRole(name, comments, user, email string) (int64, error) {
 	form := url.Values{}
 	form.Add("name", name)
@@ -226,7 +226,7 @@ func (c Client) PostRole(name, comments, user, email string) (int64, error) {
 	return c.responseID(buf)
 }
 
-//PostRoleResource 关联角色与资源.
+// PostRoleResource 关联角色与资源.
 func (c Client) PostRoleResource(roleID, resID int64) (int64, error) {
 	url := fmt.Sprintf("http://%s/rbac/role/resource/?role_id=%d&resource_id=%d", c.host, roleID, resID)
 	buf, err := c.post(url, nil)
@@ -240,7 +240,7 @@ func (c Client) PostRoleResource(roleID, resID int64) (int64, error) {
 	return c.responseID(buf)
 }
 
-//DeleteResourceRole 删除资源与角色对应关系.
+// DeleteResourceRole 删除资源与角色对应关系.
 func (c Client) DeleteResourceRole(resID, roleID int64) error {
 	url := fmt.Sprintf("http://%s/rbac/role/resource/?role_id=%d&resource_id=%d", c.host, roleID, resID)
 	buf, err := c.delete(url)
@@ -255,7 +255,7 @@ func (c Client) DeleteResourceRole(resID, roleID int64) error {
 	return err
 }
 
-//DeleteResource 删除资源.
+// DeleteResource 删除资源.
 func (c Client) DeleteResource(resID int64) error {
 	url := fmt.Sprintf("http://%s/rbac/resource/?id=%d", c.host, resID)
 	buf, err := c.delete(url)
@@ -268,7 +268,7 @@ func (c Client) DeleteResource(resID int64) error {
 	return c.responseError(buf)
 }
 
-//DeleteRoleUser 删除角色中用户.
+// DeleteRoleUser 删除角色中用户.
 func (c Client) DeleteRoleUser(roleID int64, email string) error {
 	url := fmt.Sprintf("http://%s/rbac/role/user/?role_id=%d&email=%s", c.host, roleID, email)
 	buf, err := c.delete(url)
@@ -282,7 +282,7 @@ func (c Client) DeleteRoleUser(roleID int64, email string) error {
 	return c.responseError(buf)
 }
 
-//DeleteRole 删除角色，根据名称或者ID.
+// DeleteRole 删除角色，根据名称或者ID.
 func (c Client) DeleteRole(id int64, name string) error {
 	url := fmt.Sprintf("http://%s/rbac/role/?id=%d&name=%s", c.host, id, name)
 	buf, err := c.delete(url)
@@ -345,7 +345,7 @@ func (c Client) GetResource(resID int64) (meta.Resource, error) {
 	return r.Data[0], nil
 }
 
-//GetResourceRolesUnrelated 获取未资源对应的所有角色列表.
+// GetResourceRolesUnrelated 获取未资源对应的所有角色列表.
 func (c Client) GetResourceRolesUnrelated(resID int64, email string) ([]meta.Role, error) {
 	url := fmt.Sprintf("http://%s/rbac/resource/role/unrelated/?resource_id=%d&email=%s", c.host, resID, email)
 	buf, err := c.get(url)
@@ -407,7 +407,7 @@ func (c Client) GetRole(roleID int64) (meta.Role, error) {
 	return resp.Data[0], nil
 }
 
-//GetRoleUsers 根据角色ID邮件获取相关用户.
+// GetRoleUsers 根据角色ID邮件获取相关用户.
 func (c Client) GetRoleUsers(roleID int64) ([]meta.RoleUser, error) {
 	url := fmt.Sprintf("http://%s/rbac/role/user/?role_id=%d", c.host, roleID)
 	buf, err := c.get(url)
@@ -436,7 +436,7 @@ func (c Client) GetRoleUsers(roleID int64) ([]meta.RoleUser, error) {
 	return resp.Data, nil
 }
 
-//GetUserRoles 根据邮件获取关联角色信息.
+// GetUserRoles 根据邮件获取关联角色信息.
 func (c Client) GetUserRoles(email string) ([]meta.RoleUser, error) {
 	url := fmt.Sprintf("http://%s/rbac/user/role/?email=%s", c.host, email)
 	buf, err := c.get(url)
@@ -465,7 +465,7 @@ func (c Client) GetUserRoles(email string) ([]meta.RoleUser, error) {
 	return resp.Data, nil
 }
 
-//PostRoleUser 给角色添加用户.
+// PostRoleUser 给角色添加用户.
 func (c Client) PostRoleUser(roleID int64, user, email string) (int64, error) {
 	url := fmt.Sprintf("http://%s/rbac/role/user/?role_id=%d&name=%s&email=%s", c.host, roleID, user, email)
 	buf, err := c.post(url, nil)
@@ -479,7 +479,7 @@ func (c Client) PostRoleUser(roleID int64, user, email string) (int64, error) {
 	return c.responseID(buf)
 }
 
-//PostUser 添加用户.
+// PostUser 添加用户.
 func (c Client) PostUser(user, email string) (int64, error) {
 	url := fmt.Sprintf("http://%s/rbac/user/?name=%s&email=%s", c.host, user, email)
 	buf, err := c.post(url, nil)

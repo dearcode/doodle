@@ -20,24 +20,24 @@ import (
 	"dearcode.net/doodle/service/debug"
 )
 
-//RequestHeader 默认请求头.
+// RequestHeader 默认请求头.
 type RequestHeader struct {
 	Session string
 	Request http.Request
 }
 
-//String session id.
+// String session id.
 func (h RequestHeader) String() string {
 	return h.Session
 }
 
-//ResponseHeader 默认返回头.
+// ResponseHeader 默认返回头.
 type ResponseHeader struct {
 	Status  int
 	Message string `json:",omitempty"`
 }
 
-//Service 一个服务对象.
+// Service 一个服务对象.
 type Service struct {
 	doc     document
 	docView docView
@@ -53,7 +53,7 @@ var (
 	maxWaitTime = time.Hour * 24
 )
 
-//New 返回service对象.
+// New 返回service对象.
 func New() *Service {
 	return &Service{
 		doc:    newDocument(),
@@ -61,7 +61,7 @@ func New() *Service {
 	}
 }
 
-//Init 解析flag参数, 初始化基本信息.
+// Init 解析flag参数, 初始化基本信息.
 func (s *Service) Init() {
 	flag.Parse()
 
@@ -84,7 +84,7 @@ func (s *Service) Init() {
 
 }
 
-//Register 注册接口.
+// Register 注册接口.
 func (s *Service) Register(obj interface{}) error {
 	t := reflect.TypeOf(obj)
 	if t.Kind() == reflect.Ptr {
@@ -113,7 +113,7 @@ func (s *Service) Register(obj interface{}) error {
 	return nil
 }
 
-//Start 开启服务.
+// Start 开启服务.
 func (s *Service) Start() {
 	//强制开启颜色
 	color.NoColor = false
@@ -149,19 +149,19 @@ func (s *Service) Start() {
 	log.Warningf("%v exit", os.Getpid())
 }
 
-//SetError 返回错误信息.
+// SetError 返回错误信息.
 func (h *ResponseHeader) SetError(status int, format string, argv ...interface{}) {
 	h.Status = status
 	h.Message = fmt.Sprintf(format, argv...)
 }
 
-//InvalidRequest 返回因为请求参数错误导致的异常信息(400).
+// InvalidRequest 返回因为请求参数错误导致的异常信息(400).
 func (h *ResponseHeader) InvalidRequest(format string, argv ...interface{}) {
 	h.Status = http.StatusBadRequest
 	h.Message = fmt.Sprintf(format, argv...)
 }
 
-//InternalError 返回因为内部错误导致的异常信息(500).
+// InternalError 返回因为内部错误导致的异常信息(500).
 func (h *ResponseHeader) InternalError(format string, argv ...interface{}) {
 	h.Status = http.StatusInternalServerError
 	h.Message = fmt.Sprintf(format, argv...)

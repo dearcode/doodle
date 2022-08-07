@@ -37,7 +37,7 @@ func (s *sessionCache) getToken(r *http.Request) (string, error) {
 	return c.Value, nil
 }
 
-//verify 调用sso接口验证token返回用户信息.
+// verify 调用sso接口验证token返回用户信息.
 func (s *sessionCache) verify(r *http.Request, token string) (*userinfo, error) {
 	resp := struct {
 		Status  int
@@ -62,7 +62,7 @@ func (u userinfo) String() string {
 	return u.Email
 }
 
-//loadInfo 加载资源与角色信息.
+// loadInfo 加载资源与角色信息.
 func (u *userinfo) loadInfo() error {
 	res, err := userdb.loadResource(u.Email)
 	if err != nil {

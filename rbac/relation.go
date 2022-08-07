@@ -44,7 +44,7 @@ func (rr *rbacRoleResource) DELETE(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseOK(w)
 }
 
-//GET 查询角色与资源关系.
+// GET 查询角色与资源关系.
 func (rr *rbacRoleResource) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		API        int    `json:"api"`
@@ -88,7 +88,7 @@ func (rr *rbacRoleResource) GET(w http.ResponseWriter, r *http.Request) {
 type rbacRoleUser struct {
 }
 
-//GET 查询角色对应用户.
+// GET 查询角色对应用户.
 func (ru *rbacRoleUser) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Query  int    `json:"query"`
@@ -132,7 +132,7 @@ func (ru *rbacRoleUser) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendRows(w, total, rs)
 }
 
-//POST 添加关联.
+// POST 添加关联.
 func (ru *rbacRoleUser) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Name   string `json:"name"`
@@ -187,7 +187,7 @@ func RoleUserAdd(appID, roleID int64, name, email string) (int64, error) {
 	return id, nil
 }
 
-//POST 添加关联.
+// POST 添加关联.
 func (rr *rbacRoleResource) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		RoleID     int64 `json:"role_id"`
@@ -356,7 +356,7 @@ func UnrelatedResourceRoles(appID, resourceID int64, email, sort, order string, 
 	return total, rs, nil
 }
 
-//RoleUserGet 按role，email查询关联信息.
+// RoleUserGet 按role，email查询关联信息.
 func RoleUserGet(appID, roleID int64, email string) ([]meta.RoleUser, error) {
 	where := "role_user.role_id = role.id and role_user.user_id = user.id"
 
@@ -425,7 +425,7 @@ func RelationUserRoleDel(appID, roleID int64, email, owner string) error {
 	return nil
 }
 
-//RelationValidate 权限验证
+// RelationValidate 权限验证
 func RelationValidate(appID, resID int64, email string) error {
 	sql := fmt.Sprintf("select id from role_resource where app_id=%d and resource_id=%d and role_id in (select role_id from role_user where user_id = (select id from user where email='%s'))", appID, resID, email)
 	ok, err := validate(sql)
@@ -438,7 +438,7 @@ func RelationValidate(appID, resID int64, email string) error {
 	return nil
 }
 
-//UserResourceGet 根据用户邮件地址获取资源.
+// UserResourceGet 根据用户邮件地址获取资源.
 func UserResourceGet(appID int64, email string) (result []int64, err error) {
 	where := fmt.Sprintf("app_id=%d and role_id in  (select role_id from role_user where role_user.user_id = (select id from user where email='%s' and app_id=%d))", appID, email, appID)
 	vars := []struct {
@@ -459,7 +459,7 @@ func UserResourceGet(appID int64, email string) (result []int64, err error) {
 type userResource struct {
 }
 
-//GET 查询用户资源列表.
+// GET 查询用户资源列表.
 func (ur *userResource) GET(w http.ResponseWriter, r *http.Request) {
 	email := r.URL.Query().Get("email")
 
@@ -492,7 +492,7 @@ func (ur *userResource) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseData(w, res)
 }
 
-//DELETE 删除关联.
+// DELETE 删除关联.
 func (ru *rbacRoleUser) DELETE(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Email  string `json:"email"`
@@ -523,7 +523,7 @@ func (ru *rbacRoleUser) DELETE(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseOK(w)
 }
 
-//RoleUserDelete 按role，email查询关联信息.
+// RoleUserDelete 按role，email查询关联信息.
 func RoleUserDelete(appID, roleID int64, email string) error {
 	sql := fmt.Sprintf("delete from role_user where app_id=%d and role_id=%d and user_id = (select id from user where app_id=%d and email='%v')", appID, roleID, appID, email)
 	a, err := exec(sql)
@@ -534,7 +534,7 @@ func RoleUserDelete(appID, roleID int64, email string) error {
 	return nil
 }
 
-//RoleResourceDelete 按role，resource查询关联信息.
+// RoleResourceDelete 按role，resource查询关联信息.
 func RoleResourceDelete(appID, roleID, resourceID int64) error {
 	sql := fmt.Sprintf("delete from role_resource where app_id=%d and role_id=%d and resource_id = %v", appID, roleID, resourceID)
 	a, err := exec(sql)
@@ -548,7 +548,7 @@ func RoleResourceDelete(appID, roleID, resourceID int64) error {
 type userRole struct {
 }
 
-//GET 查询用户与角色对应关系.
+// GET 查询用户与角色对应关系.
 func (ur *userRole) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Query  int    `json:"query"`

@@ -14,10 +14,10 @@ var (
 )
 
 // Init 初始化HTTP接口.
-func Init(confPath string) error {
+func Init() error {
 	var err error
 
-	if err = config.Load(confPath); err != nil {
+	if err = config.Load(); err != nil {
 		return errors.Trace(err)
 	}
 
@@ -38,7 +38,7 @@ func Init(confPath string) error {
 	return nil
 }
 
-//Stop 关闭watcher.
+// Stop 关闭watcher.
 func Stop() {
 	w.stop()
 }

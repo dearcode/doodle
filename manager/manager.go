@@ -21,7 +21,7 @@ var (
 type account struct {
 }
 
-//GET 获取用户帐号信息
+// GET 获取用户帐号信息
 func (a *account) GET(w http.ResponseWriter, r *http.Request) {
 	i, err := session.User(w, r)
 	if err != nil {
@@ -42,7 +42,7 @@ func (a *account) GET(w http.ResponseWriter, r *http.Request) {
 type serverCfg struct {
 }
 
-//onDomainGet 获取配置文件中域名
+// onDomainGet 获取配置文件中域名
 func (c *serverCfg) GET(w http.ResponseWriter, r *http.Request) {
 	resp := struct {
 		Domain string
@@ -57,7 +57,7 @@ func (c *serverCfg) GET(w http.ResponseWriter, r *http.Request) {
 type static struct {
 }
 
-//GET 静态文件
+// GET 静态文件
 func (s *static) GET(w http.ResponseWriter, r *http.Request) {
 	_, err := session.User(w, r)
 	if err != nil {

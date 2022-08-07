@@ -26,7 +26,7 @@ type distributor struct {
 	CreateTime string `db_default:"now()"`
 }
 
-//GET 编译并更新指定项目.
+// GET 编译并更新指定项目.
 func (d *distributor) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		ServiceID int64 `json:"id"`
@@ -51,7 +51,7 @@ func (d *distributor) GET(w http.ResponseWriter, r *http.Request) {
 	go d.run(t)
 }
 
-//POST 编译并更新指定项目.
+// POST 编译并更新指定项目.
 func (d *distributor) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		ServiceID int64 `json:"id"`

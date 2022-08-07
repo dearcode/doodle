@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-//userinfo erp中用户信息
+// userinfo erp中用户信息
 type userinfo struct {
 	Status   int
 	IsAdmin  bool
@@ -46,7 +46,7 @@ type statsTopIface struct {
 	Value         int64  `json:"value"`
 }
 
-//QueryResponse 专门给bootstrap-table用的.
+// QueryResponse 专门给bootstrap-table用的.
 type QueryResponse struct {
 	Total int         `json:"total"`
 	Rows  interface{} `json:"rows"`

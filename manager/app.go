@@ -32,7 +32,7 @@ type appInfos struct {
 	Size  int    `json:"limit"`
 }
 
-//GET 获取未授权应用基本信息
+// GET 获取未授权应用基本信息
 func (ais *appInfos) GET(w http.ResponseWriter, r *http.Request) {
 	if err := util.DecodeRequestValue(r, ais); err != nil {
 		fmt.Fprintf(w, err.Error())

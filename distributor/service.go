@@ -22,7 +22,7 @@ type service struct {
 	Ctime   string  `db_default:"now()"`
 }
 
-//GET 获取service的部署情况.
+// GET 获取service的部署情况.
 func (p *service) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		ID int64

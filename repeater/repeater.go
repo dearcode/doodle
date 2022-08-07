@@ -122,7 +122,7 @@ func (r *repeater) parseForm(req *http.Request, vars []*meta.Variable) error {
 	return nil
 }
 
-//Validate 验证输入参数，如果通过验证返回后端地址
+// Validate 验证输入参数，如果通过验证返回后端地址
 func (r *repeater) Validate(req *http.Request, iface *meta.Interface) error {
 	vars, err := dc.getVariable(iface.ID)
 	if err != nil {
@@ -170,7 +170,7 @@ func (r *repeater) microAPPBackendURL(iface *meta.Interface, req *http.Request) 
 	return backend, nil
 }
 
-//backendURL 如果是faas的，随机访问后端地址， 如果是传统的走域名直接访问.
+// backendURL 如果是faas的，随机访问后端地址， 如果是传统的走域名直接访问.
 func (r *repeater) backendURL(iface *meta.Interface, req *http.Request) (string, error) {
 	if iface.Service.Version == 1 {
 		return r.microAPPBackendURL(iface, req)
@@ -199,7 +199,7 @@ func (r *repeater) backendURL(iface *meta.Interface, req *http.Request) (string,
 	return iface.Backend + uri, nil
 }
 
-//buildRequest 生成后端请求request,清理无用的请求参数
+// buildRequest 生成后端请求request,清理无用的请求参数
 func (r *repeater) buildRequest(id string, iface *meta.Interface, req *http.Request) error {
 	backend, err := r.backendURL(iface, req)
 	if err != nil {
@@ -249,7 +249,7 @@ func (r *repeater) writeError(w http.ResponseWriter, err error) {
 	w.Write([]byte(err.Error()))
 }
 
-//ServeHTTP 入口
+// ServeHTTP 入口
 func (r *repeater) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	id := uuid.String()
 	w.Header().Add("Session", id)
