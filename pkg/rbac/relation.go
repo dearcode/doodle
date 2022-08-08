@@ -579,7 +579,7 @@ func (ur *userRole) GET(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(rs) == 0 {
-		server.SendResponse(w, http.StatusNotFound, "not found")
+		server.SendResponseData(w, rs)
 		log.Infof("RelationGet not found, vars:%v", vars)
 		return
 	}

@@ -6,22 +6,16 @@ import (
 	"fmt"
 
 	"dearcode.net/crab/util/aes"
-
-	rbacCfg "dearcode.net/doodle/pkg/rbac/config"
-	rpCfg "dearcode.net/doodle/pkg/repeater/config"
 )
 
 var (
-	decodeServiceKey = flag.String("decode_service_key", "", "decode service key.")
-	appID            = flag.Int64("app_id", 0, "generate rbac app key.")
+	token = flag.String("token", "", "decode token.")
+	appID = flag.Int64("app_id", 0, "generate rbac app key.")
+	key   = flag.String("key", "", "secret key.")
 )
 
-func parseServiceKey(key string) (int64, error) {
-	if err := rpCfg.Load(); err != nil {
-		return 0, nil
-	}
-
-	buf, err := aes.Decrypt(key, rpCfg.Repeater.Server.SecretKey)
+func parseToken() (int64, error) {
+	buf, err := aes.Decrypt(*token, *key)
 	if err != nil {
 		return 0, err
 	}
@@ -38,21 +32,18 @@ func main() {
 	flag.Parse()
 
 	switch {
-	case *decodeServiceKey != "":
-		id, err := parseServiceKey(*decodeServiceKey)
+	case *token != "":
+		id, err := parseToken()
 		if err != nil {
 			panic(err)
 		}
 
 		fmt.Printf("project:%v\n", id)
 	case *appID != 0:
-		if err := rbacCfg.Load(); err != nil {
-			panic(err)
-		}
 		as := make([]byte, 8)
 		binary.PutVarint(as, *appID)
 
-		buf, err := aes.Encrypt(string(as), rbacCfg.RBAC.Server.Key)
+		buf, err := aes.Encrypt(string(as), *key)
 		if err != nil {
 			panic(err)
 		}
