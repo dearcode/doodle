@@ -14,7 +14,7 @@ type statsSumAction struct {
 	ID int64 `json:"interfaceID"`
 }
 
-//GET 查询流量总数
+// GET 查询流量总数
 func (ssa *statsSumAction) GET(w http.ResponseWriter, r *http.Request) {
 	if err := util.DecodeRequestValue(r, ssa); err != nil {
 		util.SendResponse(w, http.StatusBadRequest, err.Error())

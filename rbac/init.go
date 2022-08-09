@@ -23,7 +23,7 @@ var (
 
 // ServerInit 初始化HTTP接口.
 func ServerInit() error {
-	if err := config.Load("rbac.ini"); err != nil {
+	if err := config.Load(); err != nil {
 		return err
 	}
 
@@ -66,7 +66,7 @@ func parseToken(r *http.Request) (int64, error) {
 type static struct {
 }
 
-//GET 下载静态文件
+// GET 下载静态文件
 func (s *static) GET(w http.ResponseWriter, r *http.Request) {
 	//	w.Header().Add("Cache-control", "no-store")
 	log.Debugf("file:%v", config.RBAC.Server.WebPath+r.URL.RequestURI())

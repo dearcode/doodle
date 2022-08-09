@@ -88,7 +88,7 @@ func Request(method, url string, headers map[string]string, body io.Reader) ([]b
 	return DoRequest(req)
 }
 
-//DecodeRequestValue 解析request中数据.
+// DecodeRequestValue 解析request中数据.
 func DecodeRequestValue(req *http.Request, result interface{}) error {
 	if err := req.ParseForm(); err != nil {
 		return err
@@ -130,7 +130,7 @@ func DecodeRequestValue(req *http.Request, result interface{}) error {
 	return err
 }
 
-//SendResponseJSON 返回结果，支持json
+// SendResponseJSON 返回结果，支持json
 func SendResponseJSON(w http.ResponseWriter, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	r := meta.Response{Data: data}
@@ -139,7 +139,7 @@ func SendResponseJSON(w http.ResponseWriter, data interface{}) {
 	w.Write(buf)
 }
 
-//SendResponse 返回结果，支持json
+// SendResponse 返回结果，支持json
 func SendResponse(w http.ResponseWriter, status int, f string, args ...interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	r := meta.Response{Status: status, Message: f}
@@ -152,7 +152,7 @@ func SendResponse(w http.ResponseWriter, status int, f string, args ...interface
 	w.Write(buf)
 }
 
-//LocalAddr 本机地址
+// LocalAddr 本机地址
 func LocalAddr() string {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {

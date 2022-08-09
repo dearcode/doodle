@@ -20,7 +20,7 @@ type echoResponse struct {
 	Token string `json:"token" comment:"返回测试的Token"`
 }
 
-//Post 根据用户名及ID生成Token.
+// Post 根据用户名及ID生成Token.
 func (e echo) Post(req echoRequest, resp *echoResponse) {
 	resp.Token = fmt.Sprintf("%v_%v", req.ID, req.User)
 }

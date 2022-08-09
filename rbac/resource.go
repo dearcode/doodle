@@ -17,7 +17,7 @@ import (
 type rbacResource struct {
 }
 
-//GET 查询指定应用的所有资源
+// GET 查询指定应用的所有资源
 func (res *rbacResource) GET(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		ID     int    `json:"id"`
@@ -68,7 +68,7 @@ func (res *rbacResource) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseData(w, rs)
 }
 
-//POST 为应用添加资源.
+// POST 为应用添加资源.
 func (res *rbacResource) POST(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		Name     string `json:"Name"`
@@ -99,7 +99,7 @@ func (res *rbacResource) POST(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseData(w, id)
 }
 
-//ResourceAdd 添加资源
+// ResourceAdd 添加资源
 func ResourceAdd(appID int64, name, comments string) (int64, error) {
 	res := meta.Resource{
 		AppID:    appID,
@@ -110,7 +110,7 @@ func ResourceAdd(appID int64, name, comments string) (int64, error) {
 	return add("resource", res)
 }
 
-//ResourceQuery 查询指定应用的所有资源
+// ResourceQuery 查询指定应用的所有资源
 func ResourceQuery(appID, resID int64, sort, order string, offset, limit int) (int, []meta.Resource, error) {
 	var where string
 
@@ -135,7 +135,7 @@ func ResourceQuery(appID, resID int64, sort, order string, offset, limit int) (i
 	return total, rs, nil
 }
 
-//ResourceGet 查询指定资源信息
+// ResourceGet 查询指定资源信息
 func ResourceGet(appID int64, resID ...int64) ([]meta.Resource, error) {
 	where := bytes.NewBufferString(fmt.Sprintf("app_id=%d and id in (", appID))
 	for _, id := range resID {
@@ -154,7 +154,7 @@ func ResourceGet(appID int64, resID ...int64) ([]meta.Resource, error) {
 	return rs, nil
 }
 
-//ResourceDelete 删除资源.
+// ResourceDelete 删除资源.
 func ResourceDelete(resID int64) error {
 	//清理资源
 	sql := fmt.Sprintf("delete from resource where id=%d", resID)
@@ -173,7 +173,7 @@ func ResourceDelete(resID int64) error {
 	return nil
 }
 
-//DELETE 删除资源.
+// DELETE 删除资源.
 func (res *rbacResource) DELETE(w http.ResponseWriter, r *http.Request) {
 	appID, err := parseToken(r)
 	if err != nil {

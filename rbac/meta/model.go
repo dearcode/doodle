@@ -40,7 +40,7 @@ type Resource struct {
 	Mtime    string `db:"mtime" db_default:"now()"`
 }
 
-//User 用户表.
+// User 用户表.
 type User struct {
 	ID    int64  `db:"id" db_default:"auto"`
 	AppID int64  `db:"app_id"`
@@ -50,7 +50,7 @@ type User struct {
 	Mtime string `db:"mtime" db_default:"now()"`
 }
 
-//UserInfo 用户信息.
+// UserInfo 用户信息.
 type UserInfo struct {
 	ID    int64      `db:"id" db_default:"auto"`
 	AppID int64      `db:"app_id"`
@@ -62,7 +62,7 @@ type UserInfo struct {
 	Mtime string     `db:"mtime" db_default:"now()"`
 }
 
-//RoleResource 角色与资源关联表.
+// RoleResource 角色与资源关联表.
 type RoleResource struct {
 	ID           int64  `db:"id" db_default:"auto"`
 	AppID        int64  `db:"app_id"`
@@ -75,7 +75,7 @@ type RoleResource struct {
 	Mtime        string `db:"mtime" db_default:"now()"`
 }
 
-//RoleUser 角色与用户关联表.
+// RoleUser 角色与用户关联表.
 type RoleUser struct {
 	ID           int64  `db:"id" db_default:"auto"`
 	AppID        int64  `db:"app_id"`

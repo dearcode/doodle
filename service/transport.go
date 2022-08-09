@@ -9,7 +9,7 @@ import (
 	"github.com/hokaccha/go-prettyjson"
 )
 
-//transport 转http请求为函数调用.
+// transport 转http请求为函数调用.
 func transport(w http.ResponseWriter, r *http.Request, m reflect.Method) {
 	reqType := m.Type.In(1)
 	respType := m.Type.In(2).Elem()

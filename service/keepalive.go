@@ -25,7 +25,7 @@ type keepalive struct {
 	lease clientv3.Lease
 }
 
-//apiKey 为当前项目名及IP端口
+// apiKey 为当前项目名及IP端口
 func apiKey(local string, port int) string {
 	return fmt.Sprintf("%s%s/%s/%d", apigatePrefix, debug.Project, local, port)
 }

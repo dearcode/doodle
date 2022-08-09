@@ -20,7 +20,7 @@ type node struct {
 	Mtime   string `db_default:"now()"`
 }
 
-//cluster 集群基本信息.
+// cluster 集群基本信息.
 type cluster struct {
 	ID             int64
 	Name           string
@@ -197,7 +197,7 @@ func (c *cluster) DELETE(w http.ResponseWriter, r *http.Request) {
 	server.SendData(w, id)
 }
 
-//clusterInfo 集群基本信息.
+// clusterInfo 集群基本信息.
 type clusterInfo struct {
 }
 
@@ -237,7 +237,7 @@ func (i *clusterInfo) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseData(w, c)
 }
 
-//clusterNode 集群节点信息.
+// clusterNode 集群节点信息.
 type clusterNode struct {
 }
 

@@ -47,7 +47,7 @@ func (s *statsCache) failed(id string, app, iface int64, msg string) {
 	s.add(id, app, iface, 0, false, msg)
 }
 
-//add 添加记录, 合并同一app调用同一接口的统计
+// add 添加记录, 合并同一app调用同一接口的统计
 func (s *statsCache) add(id string, app, iface, tm int64, success bool, msg string) {
 	s.Lock()
 	defer s.Unlock()
@@ -76,7 +76,7 @@ func (s *statsCache) add(id string, app, iface, tm int64, success bool, msg stri
 	log.Debugf("new log:%+v", *e)
 }
 
-//entrys 读取统计信息, 并清理
+// entrys 读取统计信息, 并清理
 func (s *statsCache) entrys() []entry {
 	s.Lock()
 	defer s.Unlock()
@@ -94,7 +94,7 @@ func (s *statsCache) entrys() []entry {
 	return es
 }
 
-//errorEntrys 异常日志, 并清理
+// errorEntrys 异常日志, 并清理
 func (s *statsCache) errorEntrys() []*errorEntry {
 	s.Lock()
 	defer s.Unlock()

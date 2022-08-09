@@ -183,7 +183,7 @@ func (w *watcher) parseDocument(backend string, app meta.MicroAPP) error {
 	return nil
 }
 
-//online 到管理处添加接口, 肯定是多个Distributor同时上报的，所以添加操作要指定版本信息.
+// online 到管理处添加接口, 肯定是多个Distributor同时上报的，所以添加操作要指定版本信息.
 func (w *watcher) online(backend string, app meta.MicroAPP) {
 	w.mu.Lock()
 	defer w.mu.Unlock()

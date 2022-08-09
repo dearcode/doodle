@@ -109,7 +109,7 @@ func (ra *relation) PUT(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("update relation success, vars:%+v", vars)
 }
 
-//TODO 删除应用，删除接口时要调用这个接口把关系也删除了
+// TODO 删除应用，删除接口时要调用这个接口把关系也删除了
 func (ra *relation) DELETE(w http.ResponseWriter, r *http.Request) {
 	vars := struct {
 		ID int64 `json:"id"`

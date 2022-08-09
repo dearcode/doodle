@@ -21,7 +21,7 @@ type account struct {
 	Email string
 }
 
-//token 直接返回urlencode之后的数据，方便调试
+// token 直接返回urlencode之后的数据，方便调试
 func (a account) token() string {
 	s := fmt.Sprintf("%d.%d", a.ID, time.Now().Unix())
 	nk, err := aes.Encrypt(s, config.RBAC.Server.Key)

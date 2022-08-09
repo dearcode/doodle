@@ -18,7 +18,7 @@ var (
 
 // ServerInit 初始化HTTP接口.
 func ServerInit() error {
-	if err := config.Load("manager.ini"); err != nil {
+	if err := config.Load(); err != nil {
 		return err
 	}
 	mdb = &config.Manager.DB

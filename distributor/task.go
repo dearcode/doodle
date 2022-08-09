@@ -239,7 +239,7 @@ func (t *task) install() error {
 	return nil
 }
 
-//compile 使用脚本编译指定应用.
+// compile 使用脚本编译指定应用.
 func (t *task) compile() error {
 	var err error
 

@@ -71,7 +71,7 @@ func (ri *resourceInfo) GET(w http.ResponseWriter, r *http.Request) {
 	server.SendResponseData(w, rs)
 }
 
-//POST 关联角色
+// POST 关联角色
 func (res *resource) POST(w http.ResponseWriter, r *http.Request) {
 	if err := util.DecodeRequestValue(r, res); err != nil {
 		util.SendResponse(w, 500, err.Error())
@@ -95,7 +95,7 @@ type resourceRole struct {
 	RoleID     int64 `json:"roleID"`
 }
 
-//DELETE 解除关联
+// DELETE 解除关联
 func (rr *resourceRole) DELETE(w http.ResponseWriter, r *http.Request) {
 	if err := util.DecodeRequestValue(r, rr); err != nil {
 		util.SendResponse(w, 500, err.Error())

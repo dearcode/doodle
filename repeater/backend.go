@@ -86,7 +86,7 @@ func (bs *backendService) load() error {
 	return nil
 }
 
-//unregister 如果etcd中事务是删除，这里就去管理处删除.
+// unregister 如果etcd中事务是删除，这里就去管理处删除.
 func (bs *backendService) unregister(name, host string, port int) {
 	bs.mu.Lock()
 	defer bs.mu.Unlock()
@@ -114,7 +114,7 @@ func (bs *backendService) unregister(name, host string, port int) {
 	}
 }
 
-//register 到管理处添加接口, 肯定是多个repeater同时上报的，所以添加操作要指定版本信息.
+// register 到管理处添加接口, 肯定是多个repeater同时上报的，所以添加操作要指定版本信息.
 func (bs *backendService) register(name string, app meta.MicroAPP) {
 	bs.mu.Lock()
 	defer bs.mu.Unlock()
@@ -138,7 +138,7 @@ func (bs *backendService) register(name string, app meta.MicroAPP) {
 	log.Debugf("new name:%s, add app:%+v", name, app)
 }
 
-//getMicroAPPs 根据接口名获取后端应用列表.
+// getMicroAPPs 根据接口名获取后端应用列表.
 func (bs *backendService) getMicroAPPs(name string) ([]meta.MicroAPP, error) {
 	bs.mu.RLock()
 	defer bs.mu.RUnlock()

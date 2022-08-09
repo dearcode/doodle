@@ -15,10 +15,9 @@ import (
 )
 
 var (
-	addr       = flag.String("h", ":8300", "api listen address")
-	debug      = flag.Bool("debug", false, "debug write log to console.")
-	version    = flag.Bool("v", false, "show version info")
-	configPath = flag.String("c", "./config/distributor.ini", "config file")
+	addr    = flag.String("h", ":8300", "api listen address")
+	debug   = flag.Bool("debug", false, "debug write log to console.")
+	version = flag.Bool("v", false, "show version info")
 
 	maxWaitTime = time.Minute
 )
@@ -37,7 +36,7 @@ func main() {
 		log.SetRolling(true)
 	}
 
-	if err := distributor.Init(*configPath); err != nil {
+	if err := distributor.Init(); err != nil {
 		panic(err)
 	}
 

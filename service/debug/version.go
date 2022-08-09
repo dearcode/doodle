@@ -47,11 +47,11 @@ func Print() {
 	fmt.Printf("Commit Message: %s\n", GitMessage)
 }
 
-//Version 版本信息.
+// Version 版本信息.
 type Version struct {
 }
 
-//GET 输出当前应用版本信息.
+// GET 输出当前应用版本信息.
 func (v *Version) GET(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Project: %s\n", Project)
 	fmt.Fprintf(w, "ServiceKey: %s\n", ServiceKey)

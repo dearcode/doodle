@@ -235,7 +235,7 @@ func (m *method) parse(arg reflect.Type, fm map[string]*field) {
 	}
 }
 
-//merge 合并匿名变量.
+// merge 合并匿名变量.
 func (m *method) merge(fm map[string]*field) {
 	ok := true
 
@@ -305,7 +305,7 @@ func newField(sf reflect.StructField) *field {
 	return f
 }
 
-//getExportComment 根据go doc生成的函数注释查询.
+// getExportComment 根据go doc生成的函数注释查询.
 func getExportComment(name, url, method string) string {
 	key := url[:len(url)-len(name)-2]
 	key = debug.Project + key + "." + name + "." + method

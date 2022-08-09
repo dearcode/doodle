@@ -15,13 +15,13 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-//Client ssh客户端，支持scp的.
+// Client ssh客户端，支持scp的.
 type Client struct {
 	server string
 	conn   *ssh.Client
 }
 
-//NewClient 创建ssh客户端.
+// NewClient 创建ssh客户端.
 func NewClient(host string, port int, user, passwd, keyFile string) (*Client, error) {
 	conf := ssh.ClientConfig{
 		User:            user,
@@ -56,7 +56,7 @@ func NewClient(host string, port int, user, passwd, keyFile string) (*Client, er
 	return &Client{conn: conn, server: server}, nil
 }
 
-//Exec 执行命令并等待返回结果.
+// Exec 执行命令并等待返回结果.
 func (c *Client) Exec(cmd string) (string, error) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -86,7 +86,7 @@ func (c *Client) Exec(cmd string) (string, error) {
 	return strings.TrimSpace(bufOut.String() + bufErr.String()), nil
 }
 
-//ExecPipe 执行命令并设置输出流.
+// ExecPipe 执行命令并设置输出流.
 func (c *Client) ExecPipe(cmdStr string, setPipe func(stdOut, stdErr io.Reader)) error {
 	defer func() {
 		if err := recover(); err != nil {
@@ -119,7 +119,7 @@ func (c *Client) ExecPipe(cmdStr string, setPipe func(stdOut, stdErr io.Reader))
 	return errors.Trace(session.Run(cmdStr))
 }
 
-//Upload 上传文件.
+// Upload 上传文件.
 func (c *Client) Upload(src, dest string) error {
 	sftp, err := sftp.NewClient(c.conn)
 	if err != nil {

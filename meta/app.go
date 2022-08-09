@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-//MicroAPP 一个函数式应用.
+// MicroAPP 一个函数式应用.
 type MicroAPP struct {
 	ServiceKey string
 	Host       string
@@ -16,7 +16,7 @@ type MicroAPP struct {
 	GitMessage string
 }
 
-//NewMicroAPP 一个应用.
+// NewMicroAPP 一个应用.
 func NewMicroAPP(host string, port int, key string, pid int, hash, time, message string) *MicroAPP {
 	return &MicroAPP{
 		ServiceKey: key,
@@ -29,7 +29,7 @@ func NewMicroAPP(host string, port int, key string, pid int, hash, time, message
 	}
 }
 
-//Version 转换字符串类型的版本号为数值型.
+// Version 转换字符串类型的版本号为数值型.
 func (m *MicroAPP) Version() int64 {
 	v, _ := strconv.ParseInt(m.GitTime, 10, 64)
 	return v

@@ -110,7 +110,7 @@ func (e *Client) CAS(cmpKey, cmpValue, key, value string) error {
 	return nil
 }
 
-//WatchPrefix 监控指定前缀.
+// WatchPrefix 监控指定前缀.
 func (e *Client) WatchPrefix(key string, ec chan clientv3.Event) {
 	watcher := clientv3.NewWatcher(e.client)
 	defer watcher.Close()
@@ -126,7 +126,7 @@ func (e *Client) WatchPrefix(key string, ec chan clientv3.Event) {
 	}
 }
 
-//Put 写.
+// Put 写.
 func (e *Client) Put(key, val string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), networkTimeout)
 	pr, err := e.client.Put(ctx, key, val)
@@ -140,7 +140,7 @@ func (e *Client) Put(key, val string) error {
 	return nil
 }
 
-//Keepalive 创建并保活一个key.
+// Keepalive 创建并保活一个key.
 func (e *Client) Keepalive(key, val string) (clientv3.Lease, error) {
 	lessor := clientv3.NewLease(e.client)
 
