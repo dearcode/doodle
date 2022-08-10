@@ -12,9 +12,9 @@ import (
 
 	"dearcode.net/crab/log"
 
-	"dearcode.net/doodle/repeater"
-	"dearcode.net/doodle/repeater/config"
-	"dearcode.net/doodle/util"
+	"dearcode.net/doodle/pkg/repeater"
+	"dearcode.net/doodle/pkg/repeater/config"
+	"dearcode.net/doodle/pkg/util"
 )
 
 var (
