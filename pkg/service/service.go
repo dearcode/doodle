@@ -17,7 +17,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/juju/errors"
 
-	"dearcode.net/doodle/service/debug"
+	"dearcode.net/doodle/pkg/service/debug"
 )
 
 // RequestHeader 默认请求头.

@@ -10,7 +10,7 @@ import (
 	"dearcode.net/crab/http/server"
 	"dearcode.net/crab/log"
 
-	"dearcode.net/doodle/service/debug"
+	"dearcode.net/doodle/pkg/service/debug"
 )
 
 const (

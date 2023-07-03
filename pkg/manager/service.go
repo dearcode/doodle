@@ -20,7 +20,7 @@ type serviceInfo struct {
 
 func (pi *serviceInfo) GET(w http.ResponseWriter, r *http.Request) {
 	if err := util.DecodeRequestValue(r, pi); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -35,7 +35,7 @@ func (pi *serviceInfo) GET(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	if err = orm.NewStmt(db, "service").Where("id=%d", pi.ID).Query(&p); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -60,7 +60,7 @@ func (p *service) GET(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = util.DecodeRequestValue(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -94,7 +94,7 @@ func (p *service) GET(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = stmt.Order(vars.Order).Offset(vars.Page).Limit(vars.Size).Sort(vars.Sort).Query(&ps); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 

@@ -21,7 +21,7 @@ func (vi *variableInfo) GET(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := util.DecodeRequestValue(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -48,7 +48,7 @@ func (vi *variableInfo) GET(w http.ResponseWriter, r *http.Request) {
 
 	buf, err := json.Marshal(result)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -76,19 +76,19 @@ func (v *variable) GET(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = util.DecodeRequestValue(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	resID, err := getServiceResourceID(vars.ServiceID)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	if err = u.assert(resID); err != nil {
 		log.Errorf("resourceID:%d, vars:%+v, err:%v", resID, vars, errors.ErrorStack(err))
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -115,7 +115,7 @@ func (v *variable) GET(w http.ResponseWriter, r *http.Request) {
 
 	buf, err := json.Marshal(result)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 

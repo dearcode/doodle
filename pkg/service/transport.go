@@ -5,7 +5,7 @@ import (
 	"reflect"
 
 	"dearcode.net/crab/http/server"
-	"dearcode.net/doodle/util/uuid"
+	"dearcode.net/doodle/pkg/util/uuid"
 	"github.com/hokaccha/go-prettyjson"
 )
 

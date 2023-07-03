@@ -35,7 +35,7 @@ type appInfos struct {
 // GET 获取未授权应用基本信息
 func (ais *appInfos) GET(w http.ResponseWriter, r *http.Request) {
 	if err := util.DecodeRequestValue(r, ais); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -65,7 +65,7 @@ func (ais *appInfos) GET(w http.ResponseWriter, r *http.Request) {
 
 	total, err := query("application", where, ais.Sort, ais.Order, ais.Page, ais.Size, &apps)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -78,7 +78,7 @@ func (ais *appInfos) GET(w http.ResponseWriter, r *http.Request) {
 
 	buf, err := json.Marshal(apps)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -92,19 +92,19 @@ type appInfo struct {
 
 func (ai *appInfo) GET(w http.ResponseWriter, r *http.Request) {
 	if err := util.DecodeRequestValue(r, ai); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	p, err := getApp(ai.ID)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	buf, err := json.Marshal(p)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -137,7 +137,7 @@ func (a *app) GET(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err = util.DecodeRequestValue(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -164,7 +164,7 @@ func (a *app) GET(w http.ResponseWriter, r *http.Request) {
 
 	total, err := query("application", where, vars.Sort, vars.Order, vars.Page, vars.Size, &apps)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -187,7 +187,7 @@ func (a *app) GET(w http.ResponseWriter, r *http.Request) {
 
 	buf, err := json.Marshal(result)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 

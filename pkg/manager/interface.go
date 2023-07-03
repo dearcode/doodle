@@ -31,20 +31,20 @@ func (i *interfaceRun) PUT(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := util.DecodeRequestValue(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	iface, err := queryInterfaceInfo(vars.ID)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	var vs []meta.Variable
 
 	if _, err = query("variable", fmt.Sprintf("interface_id=%d", vars.ID), "id", "asc", 0, 0, &vs); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 	log.Debugf("load var id:%d data:%+v", vars.ID, vs)
@@ -82,7 +82,7 @@ func (i *interfaceRun) PUT(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if req.URL, err = req.URL.Parse(backend); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -101,13 +101,13 @@ func (i *interfaceRun) PUT(w http.ResponseWriter, r *http.Request) {
 	resp, err := c.Do(req)
 	if err != nil {
 		log.Debugf("do error:%v", err.Error())
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	buf, err := httputil.DumpResponse(resp, true)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -125,20 +125,20 @@ func (ii *interfaceInfo) GET(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := util.DecodeRequestValue(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	iface, err := queryInterfaceInfo(vars.ID)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 	iface.ID = vars.ID
 
 	buf, err := json.Marshal(iface)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -168,19 +168,19 @@ func (i *interfaceAction) GET(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = util.DecodeRequestValue(r, i); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	resID, err := getServiceResourceID(i.ServiceID)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
 	if err = u.assert(resID); err != nil {
 		log.Errorf("resourceID:%d, vars:%+v, err:%v", resID, i, errors.ErrorStack(err))
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -189,7 +189,7 @@ func (i *interfaceAction) GET(w http.ResponseWriter, r *http.Request) {
 	db, err := mdb.GetConnection()
 	if err != nil {
 		log.Errorf("resourceID:%d, vars:%+v, err:%v", resID, i, errors.ErrorStack(err))
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -211,7 +211,7 @@ func (i *interfaceAction) GET(w http.ResponseWriter, r *http.Request) {
 	total, err := stmt.Count()
 	if err != nil {
 		log.Errorf("count interface error:%v", errors.ErrorStack(err))
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 	log.Debugf("count:%d", total)
@@ -273,7 +273,7 @@ func (i *interfaceAction) POST(w http.ResponseWriter, r *http.Request) {
 
 	if err = u.assert(resID); err != nil {
 		log.Errorf("resourceID:%d, vars:%+v, err:%v", resID, vars, errors.ErrorStack(err))
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 

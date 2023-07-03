@@ -28,7 +28,7 @@ func (d *docs) GET(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := util.DecodeRequestValue(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -70,7 +70,7 @@ func (d *docs) GET(w http.ResponseWriter, r *http.Request) {
 	total, err := stmt.Count()
 	if err != nil {
 		log.Errorf("query interface,service count error:%v, vars:%v", errors.ErrorStack(err), vars)
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 	if total == 0 {
@@ -80,7 +80,7 @@ func (d *docs) GET(w http.ResponseWriter, r *http.Request) {
 
 	if err = stmt.Order(vars.Order).Sort(vars.Sort).Offset(vars.Page).Limit(vars.Size).Query(&is); err != nil {
 		log.Errorf("query interface,service error:%v, vars:%v", err, vars)
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 

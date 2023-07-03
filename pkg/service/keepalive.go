@@ -8,12 +8,12 @@ import (
 
 	"dearcode.net/crab/log"
 	"github.com/juju/errors"
-	"go.etcd.io/etcd/client/v3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 
-	"dearcode.net/doodle/meta"
-	"dearcode.net/doodle/service/debug"
-	"dearcode.net/doodle/util"
-	"dearcode.net/doodle/util/etcd"
+	"dearcode.net/doodle/pkg/meta"
+	"dearcode.net/doodle/pkg/service/debug"
+	"dearcode.net/doodle/pkg/util"
+	"dearcode.net/doodle/pkg/util/etcd"
 )
 
 const (

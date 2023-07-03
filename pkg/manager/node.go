@@ -29,7 +29,7 @@ func (n *nodes) GET(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := server.ParseURLVars(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 

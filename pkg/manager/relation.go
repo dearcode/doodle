@@ -26,7 +26,7 @@ func (ra *relation) GET(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := util.DecodeRequestValue(r, &vars); err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -59,7 +59,7 @@ func (ra *relation) GET(w http.ResponseWriter, r *http.Request) {
 
 	total, err := query("relation, application, interface, service", where, vars.Sort, vars.Order, vars.Page, vars.Size, &rs)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
@@ -77,7 +77,7 @@ func (ra *relation) GET(w http.ResponseWriter, r *http.Request) {
 
 	buf, err := json.Marshal(result)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
 
